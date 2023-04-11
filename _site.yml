@@ -1,23 +1,23 @@
-name: "Curso_UFRGS"
+name: "Workshop_UofT"
 output_dir: "."
 navbar:
-  title: "Organização de dados biológicos e reprodutibilidade de projetos científicos"
+  title: "Minimum workflow for computational reproducibility in Ecology"
   left:
     - text: "Home"
       href: index.html
-    - text: "Motivação para este curso"
+    - text: "Course justification and aims"
       href: about.html
-    - text: "Organização: questão pessoal?"
+    - text: "Reproducibility: why does it matter"
       href: Intro_teorico.html
-    - text: "Ferramentas - instalando e configurando o Git"
+    - text: "The tools: installing git and connecting with RStudio"
       href: Intro_Git.html
-    - text: "Organizando o diretório"
+    - text: "Organizing local directory"
       href: Organizacao_dir_local.html
-    - text: "Organizando os scripts"
+    - text: "Organizing scripts"
       href: Organizacao_script.html
-    - text: "Git - comandos básicos"
+    - text: "Git - basic commands"
       href: Git_comandos_basicos.html
-    - text: "Git - linha de comando"
+    - text: "Git - a bit of command line"
       href: Locar_for_remote.html
-    - text: "Tornando seus dados e códigos citáveis"
+    - text: "Making your code accessible and citable"
       href: Armazenamento_permanente_Zenodo.html
