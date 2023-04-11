@@ -17,13 +17,7 @@ html_document:
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
 ```
 
-Nesta primeira seção irei apresentar as principais ferramentas que utilizaremos para nos ajudar na organização de dados. Estas ferramenta irão auxiliar desde a organização local de seus dados até a disponibilização destes dados em plataformas de acesso aberto. Várias delas já devem ser velhas conhecidas por vocês, por exemplo, o RStudio, então dispensam maiores apresentações. Por isso, grande parte deste documento vai tratar de uma ferramenta até bem conhecida pelo nome, mas que pra muita gente pode parecer coisa de outro mundo: o **Git**. Vocês verão que conhecem mais dele do que imaginam, e que muitas das funções que ele possibilita realizar nós fazemos em nosso dia-a-dia através de outros aplicativos, porém, espero conseguir mostrar o quão o **Git** é mais eficiente.
-
-# Hello Git - Introdução ao uso de sistema de controle de versões
-
-O Git trata-se de um sistema de controle de versões, mas afinal, o que é um sistema de controle de versões? Estamos mais acostumados do que imaginamos quando o assunto é controle de versões, apesar de parecer algo de outro mundo. Um exemplo que todos nós estamos acostumados é oferecido pelo editor de texto Word, quando ligamos a opção "Track changes". Ao fazermos isso estamos controlando todas as modificações que fazemos em um documento. O Git faz a mesma coisa, porém para uma pasta inteira (ou *diretório*, na linguagem do controle de versões).
-
-Portanto, o Git nada mais é que um sistema criado para realizar o rastreio de toda e qualquer modificação de arquivos dentro de uma pasta, utilizando a terminologia do versionamento, tudo o que é feito em um diretório associado ao Git é *observado* (*watch* na linguagem do versionamento).
+Here you will find instructions on how to install git, create an account in github and connect both in RStudio. 
 
 ## Git e GitHub
 
@@ -157,9 +151,9 @@ Se tudo correu bem, parabéns, agora seu RStudio está conectado ao Git e GitHub
 
 Este glossário visa listar as palavras comumente usadas na linguagem de controle de versão, atribuindo a elas seus respectivos significados em uma linguagem acessível para nós, ecólogos/zoólogos/botânicos, que visamos nos aventurar no mundo do controle de versões
 
--  **directory** = pasta
--  **commit** = aposto que você já adicionou alguma vez na sua vida a uma versão de seu arquivo a data ou algo do tipo "arquivo_V3_final". Se sim, você já fez um commit. Fazer um commit é a mesma coisa que comentar as mudanças que foram feitas e adicioná-las ao seu novo arquivo
--  **clone** =  o que o próprio nome diz. Clonar o repositório remoto na sua máquina
+-  **directory** = folder
+-  **commit** = Commentaries on files
+-  **clone** =  Clone your remote repository in your machine
 -  **pull** = baixar dados para (geralmente seu computador)
 -  **push** = subir dados para (geralmente para um servidor remoto a.k.a nuvem)
 -  **main** ou **master** = pasta remota
@@ -171,7 +165,7 @@ Este glossário visa listar as palavras comumente usadas na linguagem de control
 -  **diff** = observer a diferença entre dois arquivos
 -  **stage e unstaged** = significa selecionar (stage) ou não (unstaged) um arquivo especifico para um commit
 
-# Referências básicas
+# Basic literature
 
 - [Happy Git with R - Jenny Bryan](https://happygitwithr.com/)
 - [Git and GitHub for advanced ecological data analysis](https://afredston.github.io/learn-git/learn-git.html?s=03)

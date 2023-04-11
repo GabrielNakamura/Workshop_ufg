@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Gabriel Nakamura" />
+
+
+<title>As ferramentas, ou, Hello Git</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Minimum workflow for computational reproducibility in Ecology</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">Course justification and aims</a>
+</li>
+<li>
+  <a href="Intro_theory.html">Reproducibility: why does it matter</a>
+</li>
+<li>
+  <a href="Intro_Git.html">The tools: installing git and connecting with RStudio</a>
+</li>
+<li>
+  <a href="Organizacao_dir_local.html">Organizing local directory</a>
+</li>
+<li>
+  <a href="Organizacao_script.html">Organizing scripts</a>
+</li>
+<li>
+  <a href="Git_comandos_basicos.html">Git - basic commands</a>
+</li>
+<li>
+  <a href="Locar_for_remote.html">Git - a bit of command line</a>
+</li>
+<li>
+  <a href="Armazenamento_permanente_Zenodo.html">Making your code accessible and citable</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">As ferramentas, ou, Hello Git</h1>
+<h4 class="author">Gabriel Nakamura</h4>
+<h4 class="date">5/15/2021</h4>
+
+</div>
+
+
+<p>Here you will find instructions on how to install git, create an
+account in github and connect both in RStudio.</p>
+<div id="git-e-github" class="section level2">
+<h2>Git e GitHub</h2>
+<p>Git e <a href="https://github.com/">GitHub</a> são coisas distintas.
+O GitHub é o GoogleDrive (ou o OneDrive) dos códigos. Ele tem como
+função armazenar remotamente todos os trabalhos que são feitos
+localmente com o Git. Porém, com mais potencialidades e controle de
+armazenamento que as ferramentas do Bill Gates.</p>
+</div>
+<div id="git-e-git-client" class="section level2">
+<h2>Git e Git client</h2>
+<p>Uma simples analogia para entender a diferença entre um Git client e
+o Git é a diferença entre R e RStudio. O R é a ferramenta onde os
+processos são realizados, o RStudio é uma interface específica e
+amigável para o uso do R. Da mesma forma o Git é a ferramenta que
+realiza o controle de versão, já o Git client é a interface específica
+para que o usuário possa interagir de maneira mais amigável com o Git e
+GitHub. Existem vários Git clients que podemos utilizar para realizar
+essa interação, por exemplo, o <a
+href="https://www.gitkraken.com/">GitKraken</a> e <a
+href="https://about.gitlab.com/">GitLab</a>. Cada um tem suas vantagens
+e desvantagens.</p>
+<p>Neste curso usaremos um Git client que é um velho conhecido nosso, o
+RStudio. Faremos isso por se tratar da interface mais comum dentro dos
+estudos de ecologia, a que apresenta uma grande quantidade de materiais
+disponíveis na internet e também por ser aquela que o instrutor que vos
+fala tem mais familiaridade.</p>
+</div>
+<div id="integrando-git-github-e-rstudio" class="section level2">
+<h2>Integrando Git, GitHub e RStudio</h2>
+<p>Imagine um sistema que integra o seu programa favorito de análises
+estatísticas, o seu programa favorito de controle de versões e também o
+seu repositório remoto favorito. Pois é disso que se trata a integração
+do Git com o GitHub e RStudio. Tudo (quase tudo) pode ser feito no Git
+através do uso do RStudio e GitHub. Da mesma forma que tornamos nossos
+trabalhos locais, ou seja, aqueles que se encontram hospedados em nossos
+computadores, conectados a um serviço de nuvem para evitar possíveis
+dores de cabeça (por exemplo a morte do seu computador e perda do
+trabalho de um mestrado ou doutorado inteiro).</p>
+</div>
+<div id="mãos-no-teclado---instalando-e-configurando-o-git"
+class="section level1">
+<h1>Mãos no teclado - Instalando e configurando o Git</h1>
+<p>O primeiro passo antes de instalar o Git é saber se você já tem ele
+instalado em seu computador. Para tanto você deve acessar a linha de
+comando de seu sistema operacional (bash, prompt, isso vai variar
+dependendo do tipo de sistema que usa) e digitar o comando:</p>
+<pre class="r"><code>which git</code></pre>
+<p>Caso retorne uma mensagem indicando o local do git no seu computador,
+ótimo, uma tarefa a menos, caso contrário você terá que instalar o git
+de acordo com as especificidades do seu sistema operacional que serão
+apresentadas a seguir.</p>
+<div id="instalação-do-git-no-windows" class="section level2">
+<h2>Instalação do Git no Windows</h2>
+<p>Instale o Git acessando <a
+href="https://gitforwindows.org/">aqui</a></p>
+</div>
+<div id="instação-do-git-no-mac-os" class="section level2">
+<h2>Instação do Git no Mac OS</h2>
+<p>Instale o Git no seu Mac baixando o Xcode command line tools caso
+você ainda não o tenha. Esta aplicação já vem com o git.</p>
+<p>Em seguida configure o git usando a linha de comando seguinte:</p>
+<pre class="r"><code>git --version
+git config --global user.name &quot;Your name here&quot;
+git config --global user.email &quot;your_email@example.com&quot;</code></pre>
+<p>Voilá, aceite as configurações e clique em instalar</p>
+</div>
+<div id="instalação-do-git-no-linux" class="section level2">
+<h2>Instalação do Git no Linux</h2>
+<p>Digite a seguinte linha de comando caso você tenha Ubuntu ou Debian
+Linux</p>
+<pre class="r"><code>sudo apt-get install git</code></pre>
+<p>Se tem Fedora ou HatLinux use:</p>
+<pre class="r"><code>sudo yum install git</code></pre>
+</div>
+<div id="configurando-o-git-pelo-rstudio" class="section level2">
+<h2>Configurando o git pelo RStudio</h2>
+<p>Após a instalação do git devemos configurá-lo no nosso computador.
+Para configurar o Git, ou seja, para que o Git saiba quem está o usando,
+abra o RStudio e digite:</p>
+<pre class="r"><code>library(usethis)
+use_git_config(user.name = &quot;SeuNomeDeUsuario&quot;, user.email = &quot;seuMail@example.br&quot;)</code></pre>
+<p>Lembre de substituir os campos que aparecerão no console do seu R com
+suas informações.</p>
+<p>Uma outra opção é não fazer nada disso, pois em muitos computadores o
+RStudio já irá reconhecer automaticamente o Git instalado no seu
+computador, desta maneira, a primeira vez que subir (push) algo para o
+GitHub você deverá realizar a sua autenticação, assim o Git saberá com
+quem ele está “falando”.</p>
+<p>Durante nossas aulas prensenciais, percebemos que muitos de nós
+tivemos problemas associados ao registros de nossas credenciais do
+GitHub no cache, na prática, isso fazia com que qualquer pull ou push
+que fosse realizado requerisse as informações de login duas vezes
+seguidas (uma pelo GitHub e outra pelo RStudio). Achamos a solução para
+esse problema utilizando a autenticação através do <em>PAT</em>
+(Personal Access Token). O PAT nada mais é que uma chave aleatória
+gerada automaticamente pelo GitHub que irá servir como a sua senha para
+realizar ações de pull e push, ao cadastrarmos o PAT precisamos fazer
+isso só uma vez, a menos que você gere outro PAT para sua conta do
+GitHub. A vantagem de utilizar esse tipo de autenticação está associada
+a segurança de suas informações, já que você não vai precisar informar
+mais o seu nome de usuário e senha diretamente para um programa. Então,
+se você está tendo esse problema faça os seguintes passos:</p>
+<p>Digite a linha de código no seu console do R:</p>
+<pre class="r"><code>library(usethis)
+create_github_token()</code></pre>
+<p>Isso abrirá uma guia no seu navegador para que você gere um token,
+tal como mostrado na imagem abaixo</p>
+<div class="figure">
+<img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/PAT_Github.png"
+alt="" />
+<p class="caption">Gerando um Token</p>
+</div>
+<p>Após gerado, guarde esse token com carinho, pois ele vai ser sua nova
+senha de entrada para o GitHub via RStudio, quando for requerido. Para
+registrar esse token gerado faça o seguinte:</p>
+<pre class="r"><code>library(gitcreds)
+gitcreds_set()</code></pre>
+<p>No console aparecerá a mensagem para digitar o token, faça isso seu
+problema de autenticação estará resolvido.</p>
+</div>
+<div id="conectando-git-rstudio-e-github" class="section level2">
+<h2>Conectando Git, RStudio e Github</h2>
+<p>Para fazer isso você já precisa ter uma conta criada no GitHub e o
+Git instalado. Tendo sua conta feita vá o seu navegador de internet,
+acesse o site do GitHub e faça o login. Feito isso:</p>
+<p>1 - Crie um repositório</p>
+<p>Crie um novo repositório clicando no botão destacado na figura
+abaixo</p>
+<p><img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git1.png"
+alt="Criando um novo repositório." /> 2 - Nomeando e criando o README
+Selecione a opção <em>Public</em> e <em>Add a README file</em>. Mais
+para frente iremos entender do que se trata o README e sua importanci,
+por hora vamos apenas dizer que queremos um arquivo com esse nome no
+nosso novo repositório.</p>
+<div class="figure">
+<img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git2.png"
+alt="" />
+<p class="caption">Escolha um nome para seu repositório.</p>
+</div>
+<p>3 - Clonando</p>
+<p>Após criado o repositório vamos clonar ele para a nossa máquina, ou
+seja, vamos baixá-lo em nosso computador. Para fazer isso basta copiar o
+endereço https que aparece em destaque na figura abaixo, quando clicamos
+em <em>Code</em></p>
+<p><img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git3_clone.png"
+alt="O Clone" /> 3 - Indicando pro ao Git para onde “olhar”
+remotamente</p>
+<p>Agora vamos abrir o RStudio. Nesse passo iremos informar ao Git via
+RStudio para onde ele deve olhar remotamente, ou seja, qual a pasta
+local que deve estar conectada com o repositório remoto. Primeiro
+selecionamos em “Arquivo” um novo Projeto. Ao abrir uma janela
+selecionaremos a opção de “Version Control”</p>
+<div class="figure">
+<img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git3_Rstudio.png"
+alt="" />
+<p class="caption">RStudio is watching you</p>
+</div>
+<p>Após isso informamos o endereço do repositório remoto (aquele
+endereço https que copiamos no Github) e colamos ele no campo
+<em>Repository URL</em>. Automaticamente o campo Project directory name
+será preechido e você deve apenas escolher o lugar do seu computador que
+essa pasta será criada.</p>
+<p><img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git4_https.png"
+alt="Endereço do seu GitHub" /> Pronto, neste momento a pasta que acabou
+de ser criada no seu computador está sendo observada pelo Git e
+hospedada remotamente no GitHub. Qualquer modificação que nela fizer
+será monitorada. Esse é o resultado da mistura do R + Git + RStudio</p>
+<p><img
+src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Fusao_Git_R.png" /></p>
+<p>Se tudo correu bem, parabéns, agora seu RStudio está conectado ao Git
+e GitHub, e você está pronto para produzir projetos organizados e
+reprodutíveis.</p>
+<p><img
+src="https://media0.giphy.com/media/ynRrAHj5SWAu8RA002/200.gif" /></p>
+</div>
+</div>
+<div id="git-dictionary" class="section level1">
+<h1>Git dictionary</h1>
+<p>Este glossário visa listar as palavras comumente usadas na linguagem
+de controle de versão, atribuindo a elas seus respectivos significados
+em uma linguagem acessível para nós, ecólogos/zoólogos/botânicos, que
+visamos nos aventurar no mundo do controle de versões</p>
+<ul>
+<li><strong>directory</strong> = folder</li>
+<li><strong>commit</strong> = Commentaries on files</li>
+<li><strong>clone</strong> = Clone your remote repository in your
+machine</li>
+<li><strong>pull</strong> = baixar dados para (geralmente seu
+computador)</li>
+<li><strong>push</strong> = subir dados para (geralmente para um
+servidor remoto a.k.a nuvem)</li>
+<li><strong>main</strong> ou <strong>master</strong> = pasta remota</li>
+<li><strong>repository</strong> ou <strong>reppo</strong> = diretório
+remoto</li>
+<li><strong>watch</strong> = monitorar o repositório e cada mudança
+feita nele</li>
+<li><strong>master</strong> = repositório remoto principal</li>
+<li><strong>branch</strong> = repositório remoto, pode ser o principal
+ou repositórios adicionais</li>
+<li><strong>merge</strong> = mesclar dois arquivos</li>
+<li><strong>diff</strong> = observer a diferença entre dois
+arquivos</li>
+<li><strong>stage e unstaged</strong> = significa selecionar (stage) ou
+não (unstaged) um arquivo especifico para um commit</li>
+</ul>
+</div>
+<div id="basic-literature" class="section level1">
+<h1>Basic literature</h1>
+<ul>
+<li><a href="https://happygitwithr.com/">Happy Git with R - Jenny
+Bryan</a></li>
+<li><a
+href="https://afredston.github.io/learn-git/learn-git.html?s=03">Git and
+GitHub for advanced ecological data analysis</a></li>
+<li><a href="https://ohshitgit.com/">Lista</a> sobre o que fazer quando
+coisas dão errada no Git</li>
+<li><a
+href="https://guides.github.com/activities/citable-code/">Tornando o
+código citável</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
