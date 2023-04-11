@@ -69,7 +69,10 @@ usethis::create_github_token()
 This will make your default browser open and redirect you to GitHub webpage.
 We can do this mannualy by visiting Github settings and navigating to tokens, like in the image bellow
 
-![Gerando um Token](/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/PAT_Github.png)
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figures", "PAT_Github.png"))
+```
+
 
 After generating the token we need to 
 ```{r echo=TRUE, eval=FALSE}
@@ -86,7 +89,7 @@ You will see in the console a message asking to pass to it your token. After tha
 
 # Git dictionary
 
-Este glossário visa listar as palavras comumente usadas na linguagem de controle de versão, atribuindo a elas seus respectivos significados em uma linguagem acessível para nós, ecólogos/zoólogos/botânicos, que visamos nos aventurar no mundo do controle de versões
+Some terms used in version control workflow
 
 -  **directory** = folder
 -  **commit** = Commentaries on files

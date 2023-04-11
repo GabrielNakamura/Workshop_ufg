@@ -9,7 +9,7 @@ navbar:
       href: Intro_theory.html
     - text: "The tools: installing git and connecting with RStudio"
       href: Intro_Git.html
-    - text: "Installing and integrating git with RStudio and Github"
+    - text: "Git, Github and RStudio"
       href: Creating_repo.html
-    - text: "Connecting remote and local"
+
      
