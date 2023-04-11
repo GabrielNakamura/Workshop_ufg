@@ -9,12 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In this section you will find a few articles on the importance of adopting a reprodcucible workflow to your research project. From the individual perspective reproducibility helps you with self-organization. From the research community perspective reproducibility helps everyone to push forward the boundaries of science by facilitation the colaboration
-
-```{r}
-xaringanExtra::embed_xaringan(url = "https://gabrielnakamura.github.io/presentation-UFSM/#1")
-```
-
+In this section you will find a few articles on the importance of adopting a reprodcucible workflow to your research project. From the individual perspective reproducibility helps you with self-organization. From the research community perspective reproducibility helps everyone to push forward the boundaries of science by facilitation the colaboration.
 
 # Suggested literature
 

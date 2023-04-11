@@ -1,0 +1,35 @@
+---
+title: 'Creating a repository and conecting it with your machine'
+author: "Gabriel Nakamura"
+date: "5/17/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Creating a GitHub repository
+
+We need to create a repository, to do so navigate in your browser to GitHub page and click on *new* button, as indicated bellow
+
+```{r echo=FALSE, eval=TRUE}
+knitr::include_graphics(here::here("figures", "Git1.png"))
+
+```
+
+# Cloning the repository
+
+
+```{r echo=FALSE, eval=TRUE}
+knitr::include_graphics(here::here("figures", "Git3_clone.png"))
+```
+
+# Connecting the repo with local machine
+
+```{r echo=FALSE, eval=TRUE}
+knitr::include_graphics(here::here("figures", "Git3_Rstudio.png"))
+```
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figures", "Git4_https.png"))
+```

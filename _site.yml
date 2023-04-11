@@ -5,19 +5,11 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Course justification and aims"
-      href: about.html
     - text: "Reproducibility: why does it matter"
       href: Intro_theory.html
     - text: "The tools: installing git and connecting with RStudio"
       href: Intro_Git.html
-    - text: "Organizing local directory"
-      href: Organizacao_dir_local.html
-    - text: "Organizing scripts"
-      href: Organizacao_script.html
-    - text: "Git - basic commands"
-      href: Git_comandos_basicos.html
-    - text: "Git - a bit of command line"
-      href: Locar_for_remote.html
-    - text: "Making your code accessible and citable"
-      href: Armazenamento_permanente_Zenodo.html
+    - text: "Installing and integrating git with RStudio and Github"
+      href: Creating_repo.html
+    - text: "Connecting remote and local"
+     

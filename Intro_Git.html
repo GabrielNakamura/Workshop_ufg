@@ -12,7 +12,7 @@
 <meta name="author" content="Gabriel Nakamura" />
 
 
-<title>As ferramentas, ou, Hello Git</title>
+<title>The tools - Git, Github and RStudio</title>
 
 <script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -256,7 +256,7 @@ $(document).ready(function () {
   <a href="Intro_Git.html">The tools: installing git and connecting with RStudio</a>
 </li>
 <li>
-  <a href="Organizacao_dir_local.html">Organizing local directory</a>
+  <a href="Organizacao_dir_local.html">Installing and integrating git with RStudio and Github</a>
 </li>
 <li>
   <a href="Organizacao_script.html">Organizing scripts</a>
@@ -282,7 +282,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">As ferramentas, ou, Hello Git</h1>
+<h1 class="title toc-ignore">The tools - Git, Github and RStudio</h1>
 <h4 class="author">Gabriel Nakamura</h4>
 <h4 class="date">5/15/2021</h4>
 
@@ -291,132 +291,68 @@ $(document).ready(function () {
 
 <p>Here you will find instructions on how to install git, create an
 account in github and connect both in RStudio.</p>
-<div id="git-e-github" class="section level2">
-<h2>Git e GitHub</h2>
-<p>Git e <a href="https://github.com/">GitHub</a> são coisas distintas.
-O GitHub é o GoogleDrive (ou o OneDrive) dos códigos. Ele tem como
-função armazenar remotamente todos os trabalhos que são feitos
-localmente com o Git. Porém, com mais potencialidades e controle de
-armazenamento que as ferramentas do Bill Gates.</p>
+<div id="git-e-github---downloading-and-installing"
+class="section level2">
+<h2>Git e GitHub - downloading and installing</h2>
+<p>Git can be installed <a href="https://git-scm.com/">here</a>.</p>
+<p>You can create a GitHub account here[<a href="https://github.com/"
+class="uri">https://github.com/</a>]</p>
 </div>
 <div id="git-e-git-client" class="section level2">
 <h2>Git e Git client</h2>
-<p>Uma simples analogia para entender a diferença entre um Git client e
-o Git é a diferença entre R e RStudio. O R é a ferramenta onde os
-processos são realizados, o RStudio é uma interface específica e
-amigável para o uso do R. Da mesma forma o Git é a ferramenta que
-realiza o controle de versão, já o Git client é a interface específica
-para que o usuário possa interagir de maneira mais amigável com o Git e
-GitHub. Existem vários Git clients que podemos utilizar para realizar
-essa interação, por exemplo, o <a
-href="https://www.gitkraken.com/">GitKraken</a> e <a
-href="https://about.gitlab.com/">GitLab</a>. Cada um tem suas vantagens
-e desvantagens.</p>
-<p>Neste curso usaremos um Git client que é um velho conhecido nosso, o
-RStudio. Faremos isso por se tratar da interface mais comum dentro dos
-estudos de ecologia, a que apresenta uma grande quantidade de materiais
-disponíveis na internet e também por ser aquela que o instrutor que vos
-fala tem mais familiaridade.</p>
+<p>We are gonna use as a a Git client RStudio, that can be downloaded
+from <a href="https://posit.co/products/open-source/rstudio/">here</a>.
+PS - You will find out that RStudio changed the name, now it is called
+Posit</p>
+<p>Other Git client exist, but today we are going to use only
+RStudio.</p>
 </div>
-<div id="integrando-git-github-e-rstudio" class="section level2">
-<h2>Integrando Git, GitHub e RStudio</h2>
-<p>Imagine um sistema que integra o seu programa favorito de análises
-estatísticas, o seu programa favorito de controle de versões e também o
-seu repositório remoto favorito. Pois é disso que se trata a integração
-do Git com o GitHub e RStudio. Tudo (quase tudo) pode ser feito no Git
-através do uso do RStudio e GitHub. Da mesma forma que tornamos nossos
-trabalhos locais, ou seja, aqueles que se encontram hospedados em nossos
-computadores, conectados a um serviço de nuvem para evitar possíveis
-dores de cabeça (por exemplo a morte do seu computador e perda do
-trabalho de um mestrado ou doutorado inteiro).</p>
-</div>
-<div id="mãos-no-teclado---instalando-e-configurando-o-git"
+<div id="installing-and-configuring-git-in-your-computer"
 class="section level1">
-<h1>Mãos no teclado - Instalando e configurando o Git</h1>
-<p>O primeiro passo antes de instalar o Git é saber se você já tem ele
-instalado em seu computador. Para tanto você deve acessar a linha de
-comando de seu sistema operacional (bash, prompt, isso vai variar
-dependendo do tipo de sistema que usa) e digitar o comando:</p>
+<h1>Installing and configuring Git in your computer</h1>
+<p>First we need to know if Git is already installed in your machine. To
+check if it is already living in your computer you can type:</p>
 <pre class="r"><code>which git</code></pre>
-<p>Caso retorne uma mensagem indicando o local do git no seu computador,
-ótimo, uma tarefa a menos, caso contrário você terá que instalar o git
-de acordo com as especificidades do seu sistema operacional que serão
-apresentadas a seguir.</p>
-<div id="instalação-do-git-no-windows" class="section level2">
-<h2>Instalação do Git no Windows</h2>
-<p>Instale o Git acessando <a
-href="https://gitforwindows.org/">aqui</a></p>
+<p>If it appears a message in your computer indicating the path in which
+git is installed it means you already have git installed.</p>
 </div>
-<div id="instação-do-git-no-mac-os" class="section level2">
-<h2>Instação do Git no Mac OS</h2>
-<p>Instale o Git no seu Mac baixando o Xcode command line tools caso
-você ainda não o tenha. Esta aplicação já vem com o git.</p>
-<p>Em seguida configure o git usando a linha de comando seguinte:</p>
-<pre class="r"><code>git --version
-git config --global user.name &quot;Your name here&quot;
-git config --global user.email &quot;your_email@example.com&quot;</code></pre>
-<p>Voilá, aceite as configurações e clique em instalar</p>
-</div>
-<div id="instalação-do-git-no-linux" class="section level2">
-<h2>Instalação do Git no Linux</h2>
-<p>Digite a seguinte linha de comando caso você tenha Ubuntu ou Debian
-Linux</p>
-<pre class="r"><code>sudo apt-get install git</code></pre>
-<p>Se tem Fedora ou HatLinux use:</p>
-<pre class="r"><code>sudo yum install git</code></pre>
-</div>
-<div id="configurando-o-git-pelo-rstudio" class="section level2">
-<h2>Configurando o git pelo RStudio</h2>
-<p>Após a instalação do git devemos configurá-lo no nosso computador.
-Para configurar o Git, ou seja, para que o Git saiba quem está o usando,
-abra o RStudio e digite:</p>
-<pre class="r"><code>library(usethis)
-use_git_config(user.name = &quot;SeuNomeDeUsuario&quot;, user.email = &quot;seuMail@example.br&quot;)</code></pre>
-<p>Lembre de substituir os campos que aparecerão no console do seu R com
-suas informações.</p>
-<p>Uma outra opção é não fazer nada disso, pois em muitos computadores o
-RStudio já irá reconhecer automaticamente o Git instalado no seu
-computador, desta maneira, a primeira vez que subir (push) algo para o
-GitHub você deverá realizar a sua autenticação, assim o Git saberá com
-quem ele está “falando”.</p>
-<p>Durante nossas aulas prensenciais, percebemos que muitos de nós
-tivemos problemas associados ao registros de nossas credenciais do
-GitHub no cache, na prática, isso fazia com que qualquer pull ou push
-que fosse realizado requerisse as informações de login duas vezes
-seguidas (uma pelo GitHub e outra pelo RStudio). Achamos a solução para
-esse problema utilizando a autenticação através do <em>PAT</em>
-(Personal Access Token). O PAT nada mais é que uma chave aleatória
-gerada automaticamente pelo GitHub que irá servir como a sua senha para
-realizar ações de pull e push, ao cadastrarmos o PAT precisamos fazer
-isso só uma vez, a menos que você gere outro PAT para sua conta do
-GitHub. A vantagem de utilizar esse tipo de autenticação está associada
-a segurança de suas informações, já que você não vai precisar informar
-mais o seu nome de usuário e senha diretamente para um programa. Então,
-se você está tendo esse problema faça os seguintes passos:</p>
-<p>Digite a linha de código no seu console do R:</p>
-<pre class="r"><code>library(usethis)
-create_github_token()</code></pre>
-<p>Isso abrirá uma guia no seu navegador para que você gere um token,
-tal como mostrado na imagem abaixo</p>
+<div id="connecting-git-and-github-using-rstudio"
+class="section level1">
+<h1>Connecting Git and GitHub using RStudio</h1>
+<p>For this task we will use some R libraries, so if you do not have
+these libraries you can install them by running the following code:</p>
+<pre class="r"><code>libs &lt;- c(&quot;usethis&quot;, &quot;gitcreds&quot;, &quot;here&quot;)
+if (!requireNamespace(libs, quietly = TRUE)){
+    install.packages(libs)
+  }</code></pre>
+<p>After instalation we need to configure git and connect it our GitHub
+account. We will make this using RStudio (our git client)</p>
+<pre class="r"><code>usethis::use_git_config(user.name = &quot;YourUserName&quot;, user.email = &quot;YorMail@example.br&quot;)</code></pre>
+<p>After informing your credentials we will need to provide a password.
+In this step we need to generate a token.</p>
+<pre class="r"><code>usethis::create_github_token()</code></pre>
+<p>This will make your default browser open and redirect you to GitHub
+webpage. We can do this mannualy by visiting Github settings and
+navigating to tokens, like in the image bellow</p>
 <div class="figure">
 <img
 src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/PAT_Github.png"
 alt="" />
 <p class="caption">Gerando um Token</p>
 </div>
-<p>Após gerado, guarde esse token com carinho, pois ele vai ser sua nova
-senha de entrada para o GitHub via RStudio, quando for requerido. Para
-registrar esse token gerado faça o seguinte:</p>
+<p>After generating the token we need to</p>
 <pre class="r"><code>library(gitcreds)
-gitcreds_set()</code></pre>
-<p>No console aparecerá a mensagem para digitar o token, faça isso seu
-problema de autenticação estará resolvido.</p>
+gitcreds::gitcreds_set()</code></pre>
+<p>You will see in the console a message asking to pass to it your
+token.</p>
+<p><em>Important</em> - Save this token in a safe place, it works like
+your password. A suggestion is <a
+href="https://www.lastpass.com/">LastPass</a> app</p>
 </div>
-<div id="conectando-git-rstudio-e-github" class="section level2">
-<h2>Conectando Git, RStudio e Github</h2>
-<p>Para fazer isso você já precisa ter uma conta criada no GitHub e o
-Git instalado. Tendo sua conta feita vá o seu navegador de internet,
-acesse o site do GitHub e faça o login. Feito isso:</p>
+<div id="creating-a-github-repository" class="section level1">
+<h1>Creating a GitHub repository</h1>
+<p>We need to create a repository, to do so navigate in your browser to
+GitHub page and click on <em>new</em> button, as indicated bellow</p>
 <p>1 - Crie um repositório</p>
 <p>Crie um novo repositório clicando no botão destacado na figura
 abaixo</p>
@@ -471,7 +407,6 @@ e GitHub, e você está pronto para produzir projetos organizados e
 reprodutíveis.</p>
 <p><img
 src="https://media0.giphy.com/media/ynRrAHj5SWAu8RA002/200.gif" /></p>
-</div>
 </div>
 <div id="git-dictionary" class="section level1">
 <h1>Git dictionary</h1>
