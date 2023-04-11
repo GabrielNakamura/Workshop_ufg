@@ -247,29 +247,15 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">Course justification and aims</a>
-</li>
-<li>
   <a href="Intro_theory.html">Reproducibility: why does it matter</a>
 </li>
 <li>
   <a href="Intro_Git.html">The tools: installing git and connecting with RStudio</a>
 </li>
 <li>
-  <a href="Organizacao_dir_local.html">Installing and integrating git with RStudio and Github</a>
+  <a href="Creating_repo.html">Installing and integrating git with RStudio and Github</a>
 </li>
-<li>
-  <a href="Organizacao_script.html">Organizing scripts</a>
-</li>
-<li>
-  <a href="Git_comandos_basicos.html">Git - basic commands</a>
-</li>
-<li>
-  <a href="Locar_for_remote.html">Git - a bit of command line</a>
-</li>
-<li>
-  <a href="Armazenamento_permanente_Zenodo.html">Making your code accessible and citable</a>
-</li>
+<li class="dropdown-header">Connecting remote and local</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -344,67 +330,10 @@ alt="" />
 <pre class="r"><code>library(gitcreds)
 gitcreds::gitcreds_set()</code></pre>
 <p>You will see in the console a message asking to pass to it your
-token.</p>
+token. After that you are set!!</p>
 <p><em>Important</em> - Save this token in a safe place, it works like
 your password. A suggestion is <a
 href="https://www.lastpass.com/">LastPass</a> app</p>
-</div>
-<div id="creating-a-github-repository" class="section level1">
-<h1>Creating a GitHub repository</h1>
-<p>We need to create a repository, to do so navigate in your browser to
-GitHub page and click on <em>new</em> button, as indicated bellow</p>
-<p>1 - Crie um repositório</p>
-<p>Crie um novo repositório clicando no botão destacado na figura
-abaixo</p>
-<p><img
-src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git1.png"
-alt="Criando um novo repositório." /> 2 - Nomeando e criando o README
-Selecione a opção <em>Public</em> e <em>Add a README file</em>. Mais
-para frente iremos entender do que se trata o README e sua importanci,
-por hora vamos apenas dizer que queremos um arquivo com esse nome no
-nosso novo repositório.</p>
-<div class="figure">
-<img
-src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git2.png"
-alt="" />
-<p class="caption">Escolha um nome para seu repositório.</p>
-</div>
-<p>3 - Clonando</p>
-<p>Após criado o repositório vamos clonar ele para a nossa máquina, ou
-seja, vamos baixá-lo em nosso computador. Para fazer isso basta copiar o
-endereço https que aparece em destaque na figura abaixo, quando clicamos
-em <em>Code</em></p>
-<p><img
-src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git3_clone.png"
-alt="O Clone" /> 3 - Indicando pro ao Git para onde “olhar”
-remotamente</p>
-<p>Agora vamos abrir o RStudio. Nesse passo iremos informar ao Git via
-RStudio para onde ele deve olhar remotamente, ou seja, qual a pasta
-local que deve estar conectada com o repositório remoto. Primeiro
-selecionamos em “Arquivo” um novo Projeto. Ao abrir uma janela
-selecionaremos a opção de “Version Control”</p>
-<div class="figure">
-<img
-src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git3_Rstudio.png"
-alt="" />
-<p class="caption">RStudio is watching you</p>
-</div>
-<p>Após isso informamos o endereço do repositório remoto (aquele
-endereço https que copiamos no Github) e colamos ele no campo
-<em>Repository URL</em>. Automaticamente o campo Project directory name
-será preechido e você deve apenas escolher o lugar do seu computador que
-essa pasta será criada.</p>
-<p><img
-src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Git4_https.png"
-alt="Endereço do seu GitHub" /> Pronto, neste momento a pasta que acabou
-de ser criada no seu computador está sendo observada pelo Git e
-hospedada remotamente no GitHub. Qualquer modificação que nela fizer
-será monitorada. Esse é o resultado da mistura do R + Git + RStudio</p>
-<p><img
-src="/Users/gabrielnakamura/OneDrive/Aulas/Disciplina_ppgEco/Curso_UFRGS_organizacao_de_dados/Fusao_Git_R.png" /></p>
-<p>Se tudo correu bem, parabéns, agora seu RStudio está conectado ao Git
-e GitHub, e você está pronto para produzir projetos organizados e
-reprodutíveis.</p>
 <p><img
 src="https://media0.giphy.com/media/ynRrAHj5SWAu8RA002/200.gif" /></p>
 </div>
