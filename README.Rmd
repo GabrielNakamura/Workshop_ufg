@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  eval = FALSE
+)
+```
+
+# (Very) Short course - Minimum reproducible workflow with minimun effort
+
+Hi there, this is the repository for the short course **Minimum reproducible workflow with minimum effort**. This is a three hour workshop that has the aim of showing how to start using essential tools to guarantee a reproducible and organized workflow for your research projects.
+
+All materials needed in this course can be found here and in the [website]() 
+
+# Authors
+
+Gabriel Nakamura
+
+
+
+

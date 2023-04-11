@@ -1,0 +1,23 @@
+name: "Curso_UFRGS"
+output_dir: "."
+navbar:
+  title: "Organização de dados biológicos e reprodutibilidade de projetos científicos"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Motivação para este curso"
+      href: about.html
+    - text: "Organização: questão pessoal?"
+      href: Intro_teorico.html
+    - text: "Ferramentas - instalando e configurando o Git"
+      href: Intro_Git.html
+    - text: "Organizando o diretório"
+      href: Organizacao_dir_local.html
+    - text: "Organizando os scripts"
+      href: Organizacao_script.html
+    - text: "Git - comandos básicos"
+      href: Git_comandos_basicos.html
+    - text: "Git - linha de comando"
+      href: Locar_for_remote.html
+    - text: "Tornando seus dados e códigos citáveis"
+      href: Armazenamento_permanente_Zenodo.html
