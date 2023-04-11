@@ -11,5 +11,10 @@ navbar:
       href: Intro_Git.html
     - text: "Git, Github and RStudio"
       href: Creating_repo.html
+    - text: "Colaboration with GitHub"
+      href: colabs_git.html
+    - text: "Version control basics"
+      href: basics_git.html
+      
 
      

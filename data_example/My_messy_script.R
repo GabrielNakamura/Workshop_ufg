@@ -5,7 +5,7 @@ library(palmerpenguins)
 library(dplyr)
 library(ggplot2)
 theme_set(theme_minimal())
-write.csv2(penguins, here::here("data_example", "raw_data_penguins.csv"))
+
 
 data_processed <- 
 penguins %>%

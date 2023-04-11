@@ -1,0 +1,12 @@
+---
+title: 'Colaborating with git'
+author: "Gabriel Nakamura"
+date: "5/17/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# How to use git to collaboration?
