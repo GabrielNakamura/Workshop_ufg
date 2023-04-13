@@ -7,5 +7,7 @@ Hello!
 Thanks for stopping by! This is the supplementary material designed to help the short course *Minimum workflow for computational reproducibility in ecological projects* that will be ministered virtually by me, [Gabriel Nakamura](https://main--gabrielnakamura.netlify.app/), at University of Toronto.
 
 
+This website uses the amazing illustrations by [Allison Horst](https://allisonhorst.com/git-github)
+
 
 
