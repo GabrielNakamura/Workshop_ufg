@@ -9,4 +9,63 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Pull, Push and Commits
+# 1. Pull, Push and Commits
+
+Git is a powerful tool, at the same time this it allows to control almost all aspects of versioning in our project, it can be very scary. However, as a starting point we need to understand basically three actions: pull, commit and push. The illustration bellow gives a good overview about how those three actions work.
+
+```{r echo=FALSE,eval=TRUE,out.width="60%"}
+knitr::include_graphics(here::here("figures", "git_pull_comm_push.png"))
+```
+
+Let's go to the R scripts to use these commands
+
+# 2. The importance of commits 
+
+```{r echo=FALSE, eval=TRUE,out.width="60%"}
+knitr::include_graphics(here::here("figures", "git_commit_illustration.png"))
+```
+
+# 3. Organizing local repo
+
+We have, at least 3 different types of files:
+
+- R scripts and functions
+- data 
+- output
+
+
+So it is reasonable to organize our repository with the following template:
+
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figures", "directory_org.png"))
+```
+
+
+Now let'ts organize our data
+
+# Naming files
+
+A good rule is: 
+
+**Human + Machine redable**
+
+Example:
+
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figures", "naming-files-data.png"))
+```
+
+
+# Naming scripts
+
+
+
+## Important references
+
+[Douglas McDonald website](https://www.douganddata.com/2022/07/on-naming-things/)
+
+[Jenny Bryan as always](http://www2.stat.duke.edu/~rcs46/lectures_2015/01-markdown-git/slides/naming-slides/naming-slides.pdf)
+
+[Hadley Wickham of course](http://adv-r.had.co.nz/Style.html)
+
+

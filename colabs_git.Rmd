@@ -9,4 +9,4 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# How to use git to collaboration?
+# How to use git in collaborative projects?
