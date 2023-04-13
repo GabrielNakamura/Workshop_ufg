@@ -61,14 +61,16 @@ We have, at least 3 different types of files:
 - R scripts and functions
 - data 
 - output
-
+- [README](https://github.com/drsimonj/R-template-project)
 
 So it is reasonable to organize our repository with the following template:
 
 ```{r echo=FALSE,eval=TRUE}
 knitr::include_graphics(here::here("figures", "directory_org.png"))
 ```
-Some tools can help you to get an automated scaffold directory for your project, for example, see this one by [Carl Boettiger](https://github.com/cboettig/template), and this by [Francisco Rodriguez-Sanchez](https://github.com/Pakillo/template). In essence, you will notice that the structure of these directories resambles the structure of an R package.
+Some tools can help you to get an automated scaffold directory for your project, for example, see this one by [Carl Boettiger](https://github.com/cboettig/template), and this by [Francisco Rodriguez-Sanchez](https://github.com/Pakillo/template). In essence, you will notice that the structure of these directories resembles the structure of an R package.
+
+
 
 # 4. Now let'ts organize our data and scripts
 
