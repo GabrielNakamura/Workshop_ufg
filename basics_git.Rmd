@@ -21,9 +21,39 @@ Let's go to the R scripts to use these commands
 
 # 2. The importance of commits 
 
+What is a commit?
+
+A commit, or "revision", is an individual change to a file (or set of files).
+
+
 ```{r echo=FALSE, eval=TRUE,out.width="60%"}
 knitr::include_graphics(here::here("figures", "git_commit_illustration.png"))
 ```
+
+
+## Exploring commits
+
+A litlle about terminology:
+
+- **Origin**: The default upstream repository
+
+- **Master** (sometimes **Main**): the main branch of your repo
+
+- **diff**: differences between two commits in a file
+
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figures", "commit-model.png"))
+```
+
+## Revisiting the past using commits
+
+We can navigate through the past commits by using RStudio or GitHub.
+
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figures", "history-RStudio.png"))
+```
+
+
 
 # 3. Organizing local repo
 
@@ -41,7 +71,7 @@ knitr::include_graphics(here::here("figures", "directory_org.png"))
 ```
 
 
-Now let'ts organize our data
+# 4. Now let'ts organize our data and scripts
 
 # Naming files
 
@@ -55,12 +85,20 @@ Example:
 knitr::include_graphics(here::here("figures", "naming-files-data.png"))
 ```
 
-
 # Naming scripts
 
+Particularly, I use the following rule
+
+**number_upper-case-letter_What-the-script-does.R**
+
+- number: used to indicate the sequence to run the scripts
+
+- uper case letter: what the script does (proccess, clean, analysis, function)
+
+- What the script does: a brief description of what the script does
 
 
-## Important references
+# Important references
 
 [Douglas McDonald website](https://www.douganddata.com/2022/07/on-naming-things/)
 
