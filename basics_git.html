@@ -292,7 +292,28 @@ overview about how those three actions work.</p>
 </div>
 <div id="the-importance-of-commits" class="section level1">
 <h1>2. The importance of commits</h1>
+<p>What is a commit?</p>
+<p>A commit, or “revision”, is an individual change to a file (or set of
+files).</p>
 <p><img src="figures/git_commit_illustration.png" width="60%" /></p>
+<div id="exploring-commits" class="section level2">
+<h2>Exploring commits</h2>
+<p>A litlle about terminology:</p>
+<ul>
+<li><p><strong>Origin</strong>: The default upstream repository</p></li>
+<li><p><strong>Master</strong> (sometimes <strong>Main</strong>): the
+main branch of your repo</p></li>
+<li><p><strong>diff</strong>: differences between two commits in a
+file</p></li>
+</ul>
+<p><img src="figures/commit-model.png" width="683" /></p>
+</div>
+<div id="revisiting-the-past-using-commits" class="section level2">
+<h2>Revisiting the past using commits</h2>
+<p>We can navigate through the past commits by using RStudio or
+GitHub.</p>
+<p><img src="figures/history-RStudio.png" width="1002" /></p>
+</div>
 </div>
 <div id="organizing-local-repo" class="section level1">
 <h1>3. Organizing local repo</h1>
@@ -301,11 +322,22 @@ overview about how those three actions work.</p>
 <li>R scripts and functions</li>
 <li>data</li>
 <li>output</li>
+<li><a
+href="https://github.com/drsimonj/R-template-project">README</a></li>
 </ul>
 <p>So it is reasonable to organize our repository with the following
 template:</p>
-<p><img src="figures/directory_org.png" width="540" /></p>
-<p>Now let’ts organize our data</p>
+<p><img src="figures/directory_org.png" width="540" /> Some tools can
+help you to get an automated scaffold directory for your project, for
+example, see this one by <a
+href="https://github.com/cboettig/template">Carl Boettiger</a>, and this
+by <a href="https://github.com/Pakillo/template">Francisco
+Rodriguez-Sanchez</a>. In essence, you will notice that the structure of
+these directories resembles the structure of an R package.</p>
+</div>
+<div id="now-letts-organize-our-data-and-scripts"
+class="section level1">
+<h1>4. Now let’ts organize our data and scripts</h1>
 </div>
 <div id="naming-files" class="section level1">
 <h1>Naming files</h1>
@@ -316,8 +348,18 @@ template:</p>
 </div>
 <div id="naming-scripts" class="section level1">
 <h1>Naming scripts</h1>
-<div id="important-references" class="section level2">
-<h2>Important references</h2>
+<p>Particularly, I use the following rule</p>
+<p><strong>number_upper-case-letter_What-the-script-does.R</strong></p>
+<ul>
+<li><p>number: used to indicate the sequence to run the scripts</p></li>
+<li><p>uper case letter: what the script does (proccess, clean,
+analysis, function)</p></li>
+<li><p>What the script does: a brief description of what the script
+does</p></li>
+</ul>
+</div>
+<div id="important-references" class="section level1">
+<h1>Important references</h1>
 <p><a
 href="https://www.douganddata.com/2022/07/on-naming-things/">Douglas
 McDonald website</a></p>
@@ -326,7 +368,6 @@ href="http://www2.stat.duke.edu/~rcs46/lectures_2015/01-markdown-git/slides/nami
 Bryan as always</a></p>
 <p><a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham of
 course</a></p>
-</div>
 </div>
 
 

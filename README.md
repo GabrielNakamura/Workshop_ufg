@@ -10,7 +10,7 @@ to guarantee a reproducible and organized workflow for your research
 projects.
 
 All materials needed in this course can be found here and in the
-[website]()
+[website](https://gabrielnakamura.github.io/Workshop_UofT/index.html)
 
 # Authors
 

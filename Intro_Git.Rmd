@@ -23,7 +23,7 @@ Here you will find instructions on how to install git, create an account in gith
 
 Git can be installed [here](https://git-scm.com/).
 
-You can create a GitHub account here[https://github.com/]
+You can create a GitHub account [here](https://github.com/)
 
 ## Git e Git client
 
@@ -95,15 +95,12 @@ Some terms used in version control workflow
 -  **commit** = Commentaries on files
 -  **clone** =  Clone your remote repository in your machine
 -  **pull** = baixar dados para (geralmente seu computador)
--  **push** = subir dados para (geralmente para um servidor remoto a.k.a nuvem)
--  **main** ou **master** = pasta remota
--  **repository** ou **reppo** = diretório remoto
--  **watch** = monitorar o repositório e cada mudança feita nele
--  **master** = repositório remoto principal
--  **branch** = repositório remoto, pode ser o principal ou repositórios adicionais
--  **merge** = mesclar dois arquivos
--  **diff** = observer a diferença entre dois arquivos
--  **stage e unstaged** = significa selecionar (stage) ou não (unstaged) um arquivo especifico para um commit
+-  **push** = upload your data to from your computer to the remote 
+-  **main** ou **master** = a branch
+-  **repository** ou **reppo** = a directory
+-  **watch** = monitoring a directory
+
+For more definitions of terms in version control and github, please check [github glossary webpage](https://docs.github.com/en/get-started/quickstart/github-glossary#commit)
 
 # Basic literature
 
