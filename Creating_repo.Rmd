@@ -21,6 +21,7 @@ knitr::include_graphics(here::here("figures", "Git1.png"))
 # Cloning the repository
 
 
+Copy the **https** from your remote repository
 ```{r echo=FALSE, eval=TRUE}
 knitr::include_graphics(here::here("figures", "Git3_clone.png"))
 ```
@@ -30,6 +31,8 @@ knitr::include_graphics(here::here("figures", "Git3_clone.png"))
 ```{r echo=FALSE, eval=TRUE}
 knitr::include_graphics(here::here("figures", "Git3_Rstudio.png"))
 ```
+
+Paste the URL from github
 ```{r echo=FALSE,eval=TRUE}
 knitr::include_graphics(here::here("figures", "Git4_https.png"))
 ```

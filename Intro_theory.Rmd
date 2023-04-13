@@ -18,5 +18,6 @@ In this section you will find a few articles on the importance of adopting a rep
 - [Publish your computer code: it is good enough](https://www.nature.com/news/2010/101013/pdf/467753a.pdf)
 - [Not just for programmers: How github can accelerate collaborative and reproducible research in ecology and evolution](https://www.researchgate.net/publication/361991379_Not_just_for_programmers_How_GitHub_can_accelerate_collaborative_and_reproducible_research_in_ecology_and_evolution)
 - [A begginers guide to conducting reproducible research](https://esajournals.onlinelibrary.wiley.com/doi/10.1002/bes2.1801)  
+- [Happy git with R](https://happygitwithr.com/index.html) This is the best one in my opinion!
 
 
