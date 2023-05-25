@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 # Integrando modelos macroevolutivos e dados de assembleias
 
+
 A partir desta seção você vai encontrar métodos que integram modelos macroevolutivos e dados de ocorrência de espécies em assembleias. Para isso precisaremos de dados que retornam de modelos macroevolutivos de reconstrução de área ancestral. Por enquanato o Herodotools é capaz de lidar apenas com resultados que retornam dos modelos de reconstrução vindos do pacote {`BioGeoBEARS`}
 
 Visto que o modelo de reconstrução de áreas ancestrais pode demorar para rodar, vamos ler um modelo pronto apenas para fins didáticos. Neste modelo reconstruímos as evoregiões para os nós ancestrais das espécies de Akodon utilizadas anteriormente
