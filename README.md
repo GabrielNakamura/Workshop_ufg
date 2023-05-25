@@ -51,7 +51,7 @@ seu computador. Isso ajudará no acompanhamento da parte prática do
 workshop. Para fazer o download é só digitar o seguinte código:
 
 ``` r
-download.file(url = "https://github.com/GabrielNakamura/workshop_ufg_Herodotools/archive/master.zip", destfile = "workshop_herodotools.zip")
+download.file(url = "https://github.com/GabrielNakamura/Workshop_ufg/archive/master.zip", destfile = "workshop_herodotools.zip")
 
 # para descomprimir a pasta
 
