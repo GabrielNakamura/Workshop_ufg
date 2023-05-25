@@ -10,19 +10,75 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%",
-  eval = FALSE
+  eval = FALSE,
+  echo = TRUE
 )
 ```
 
-# (Very) Short course - Minimum reproducible workflow with minimun effort
+<img src="figs/logo_herodotools.png" alt="package logo with a map and a phylogeny inside" width="250px" align="right"/>
 
-Hi there, this is the repository for the short course **Minimum reproducible workflow with minimum effort**. This is a three hour workshop that has the aim of showing how to start using essential tools to guarantee a reproducible and organized workflow for your research projects.
+# Workshop Herodotools
 
-All materials needed in this course can be found here and in the [website](https://gabrielnakamura.github.io/Workshop_UofT/index.html) 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://choosealicense.com/licenses/mit/)
 
-# Authors
+[![DOI](https://zenodo.org/badge/363983380.svg)](https://zenodo.org/badge/latestdoi/363983380)
 
-Gabriel Nakamura
+
+# Download 
+
+Para instação da última versão do pacote siga os passos seguintes:
+
+```{.r}
+if (!requireNamespace("devtools", quietly = TRUE)){
+    install.packages("devtools")
+  }
+devtools::install_github("GabrielNakamura/Herodotools")
+```
+
+Recomendo instalar também alguns pacotes adicionais. Caso já os tenha, os pacotes não serão instalados novamente.
+
+```{r}
+libs <- c("ape", "picante", "dplyr", "tidyr", "purrr",
+          "raster", "terra", "ggplot2", "stringr",
+          "here", "sf", "rnaturalearth", "rcartocolor", "patchwork")
+if (!requireNamespace(libs, quietly = TRUE)){
+    install.packages(libs)
+  }
+
+```
+
+Alguns pacotes necesssário não estão na cran. Apesar de serem dependências do Herodotools, em caso de problemas na instalação, recomendo baixar estes pacotes primeiro e em seguidar repetir o download do Herodotools
+
+```{r}
+if (!requireNamespace(c("daee","BioGeoBEARS"), quietly = TRUE)){
+  devtools::install_github("vanderleidebastiani/daee")
+  devtools::install_github("nmatzke/BioGeoBEARS")
+}
+library(daee)
+library(BioGeoBEARS)
+```
+
+Por fim, por favor, se possível façam o download deste repositório no  seu computador. Isso ajudará no acompanhamento da parte prática do workshop. Para fazer o download é só digitar o seguinte código:
+
+```{r}
+download.file(url = "https://github.com/GabrielNakamura/workshop_ufg_Herodotools/archive/master.zip", destfile = "workshop_herodotools.zip")
+
+# para descomprimir a pasta
+
+unzip(zipfile = "workshop_herodotools.zip")
+
+```
+
+# Informações adicionais
+
+Para mais detalhes sobre o pacote, por favor, visite [a página do Herodotools](https://gabrielnakamura.github.io/Herodotools/)
+
+# Autores
+
+[Gabriel Nakamura](https://buscatextual.cnpq.br/buscatextual/visualizacv.do?id=K4436271D5&tokenCaptchar=03AL8dmw_ahjC34vwiKCSxy42OB3unBotZDRIrrc8u8U29BxtsinGbZpxrvh2Q6RkwudID5lIHbcMRIOafoAomRTIe3PDnqDXahAsfUkWLxCIEVy1Lt3x21uYyJmDMl_9ktOEu9twdFHvbBSR5QVo3taKJBlcGzdxx_aUrFyZsEIq-IaipNrs6L4W6HRzT_mdfUCZefAfbXHLJbXRCZ-Zw9qyGdRg495V-zqIIQsnay_oHEC8AczWL_cjMEdo5Xn-AanEzj_NyR9hntORXM2zQggWeRq5g0HACoI5_QlAdz4Wvs3sV5rvGO_6NS4TWzSig66lJC-C2mjdJMiFXH1SAJyMbSn2DR6BJqtE-xJnQrXaLnuqyL4RUnj8B_C8fICjkoQ_7DSHhPy3_uYeOUlb01WCVyx5SYkChtCG8lfjzaEsmSjKRsLCBnTRzQptL6T4kP6uHgxAXUWbLfHH8xpGlhj7Et9SPRKXL7ShQwFTySJSv1Vwo-CFsgDn3MkWaZk4VTQYmbFJq9PfudWxY3fWa9XwJbY8_8Ojyf-n5_WO5CAF-MeFcawqqRIw), Arthur Rodrigues, André Luza, Renan Maestri, Vanderlei Debastiani and Leandro Duarte
+
+
+Para acessar os scripts que utilizaremos durante o workshop [clique aqui](https://gabrielnakamura.github.io/workshop_ufg_Herodotools/)
 
 
 

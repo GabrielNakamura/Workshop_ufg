@@ -1,20 +1,13 @@
-name: "Workshop_UofT"
+name: "Workshop_Herodotools_ufg"
 output_dir: "."
 navbar:
-  title: "Minimum workflow for computational reproducibility in Ecology"
+  title: "Introdução ao pacote Herodotools"
   left:
-    - text: "Home"
+    - text: "Antes de começar"
       href: index.html
-    - text: "Reproducibility: why does it matter"
-      href: Intro_theory.html
-    - text: "The tools: installing git and connecting with RStudio"
-      href: Intro_Git.html
-    - text: "Git, Github and RStudio"
-      href: Creating_repo.html
-    - text: "Colaboration with GitHub"
-      href: colabs_git.html
-    - text: "Version control basics"
-      href: basics_git.html
-      
+    - text: "Biogeografia"
+      href: Hands_on.html
+    - text: "Integrando Macroevolução e Comunidades"
+      href: Macro_comms.html
 
      

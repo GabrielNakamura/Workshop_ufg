@@ -1,0 +1,365 @@
+---
+title: "Integrando Macroevolução e Comunidades"
+author: "Gabriel Nakamura"
+date: "2023-05-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# Integrando modelos macroevolutivos e dados de assembleias
+
+A partir desta seção você vai encontrar métodos que integram modelos macroevolutivos e dados de ocorrência de espécies em assembleias. Para isso precisaremos de dados que retornam de modelos macroevolutivos de reconstrução de área ancestral. Por enquanato o Herodotools é capaz de lidar apenas com resultados que retornam dos modelos de reconstrução vindos do pacote {`BioGeoBEARS`}
+
+Visto que o modelo de reconstrução de áreas ancestrais pode demorar para rodar, vamos ler um modelo pronto apenas para fins didáticos. Neste modelo reconstruímos as evoregiões para os nós ancestrais das espécies de Akodon utilizadas anteriormente
+
+```{r}
+library(BioGeoBEARS)
+load(file = system.file("extdata", "resDEC_akodon.RData", package = "Herodotools")) 
+```
+
+Caso queira construir seu próprio modelo de reconstrução de áreas ancestrais utilizando o BioGeoBEARS, o pacote Herodotools apresenta algumas funções auxiliares para obtenção de dados nos formatos necessários para o BioGeoBEARS. Por exemplo, precisamos de um objeto que informe a ocorrência de cada espécies em cada região (ou evoregião). Para tanto, podemos utilizar a seguinte função auxiliar:
+
+```{r}
+a_region <- Herodotools::get_region_occ(comm = akodon_pa_tree, site.region = site_region)
+```
+O objeto resultante desta função é uma matriz que contém as espécies nas linhas e as regiões nas colunas. Zeros e Uns indicam a ausência e presença destas espécies em cada região. Este objeto pode ser utilizado em conjunto com outra função auxiliar do Herodotools para obtenção de outro objeto importante em análises de reconstrução de áres ancestrais chamado arquivo [Phyllip](http://scikit-bio.org/docs/0.2.3/generated/skbio.io.phylip.html)
+
+```{r}
+Herodotools::get_tipranges_to_BioGeoBEARS(
+  a_region, 
+  # please set a new path to save the file
+  filename = here::here("data", "geo_area_akodon.data"),
+  areanames = NULL
+  )
+
+```
+
+Confira o arquivo Phyllip gerado, e que agora foi salvo no seu workspace.
+
+A partir de agora vamos calcular métricas implementadas no pacote que integram tanto o dado de ocorrência atual com o dado do modelo de reconstrução de áreas ancestrais obtidos a partir da reconstrução das evoregiões (lembrando que esta reconstrução poderia ser feita com outro tipo de dado biogeográfico)
+
+## Idade de comunidades
+
+Vamos inciar calculando a idade das assembleias considerando a distribuição presente e passada das linhagens. Para mais informação sobre como esta métrica pode ser utilizada, dê uma olhada [nesse artigo](https://academic.oup.com/biolinnean/article-abstract/134/1/57/6297962)
+
+```{r}
+biogeo_area <- data.frame(biogeo = chartr("12345", "ABCDE", evoregion_df$site_region)) 
+
+# getting the ancestral range area for each node 
+node_area <- 
+  Herodotools::get_node_range_BioGeoBEARS(
+    resDEC,
+    phyllip.file = here::here("data", "geo_area_akodon.data"),
+    akodon_newick,
+    max.range.size = 4 
+  )
+
+# calculating age arrival 
+age_comm <- Herodotools::calc_age_arrival(W = akodon_pa_tree, 
+                        tree = akodon_newick, 
+                        ancestral.area = node_area, 
+                        biogeo = biogeo_area) 
+
+
+
+```
+
+Podemos vizualizar a distribuição espacial das idades
+
+```{r}
+sites <- dplyr::bind_cols(site_xy, site_region =  site_region, age = age_comm$mean_age_per_assemblage)
+
+map_age <- 
+  sites %>% 
+  ggplot() + 
+  ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = mean_age_arrival)) + 
+  rcartocolor::scale_fill_carto_c(type = "quantitative", 
+                     palette = "SunsetDark",
+                     direction = 1, 
+                     limits = c(0, 3.5),  ## max percent overall
+                     breaks = seq(0, 3.5, by = .5),
+                     labels = glue::glue("{seq(0, 3.5, by = 0.5)}")) +
+  ggplot2::geom_sf(data = coastline, size = 0.4) +
+  ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+  ggplot2::ggtitle("") + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(fill = "Mean age (Myr)") +
+  ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+  ggplot2::theme(
+        legend.position = "bottom",
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "mm"),
+        legend.text = element_text(size = 9), 
+        axis.text = element_text(size = 8),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
+        plot.subtitle = element_text(hjust = 0.5)
+        )
+map_age
+```
+
+## Diversificação in-situ
+
+Outra nova métrica que integra a distribuição passada e presente das espécies em nível de assembleias é a **Diversificação in-situ**. Esta métrica é uma simples modificação da métrica DR (obtida a partir do inverso do equal-splits), que considera apenas a porção de diversificação que ocorreu **dentro** de uma região.
+
+```{r}
+akodon_diversification <- 
+Herodotools::calc_insitu_diversification(W = akodon_pa_tree,
+                   tree = akodon_newick, 
+                   ancestral.area = node_area, 
+                   biogeo = biogeo_area, 
+                   diversification = "jetz",
+                   type = "equal.splits")
+
+
+```
+
+Podemos vizualizar os padrões espaciais de diversificação in-situ. A função contém tanto a métrica original quanto a versão modificada que considera apenas a diversificação in-situ
+
+```{r}
+sites <- dplyr::bind_cols(site_xy,
+                   site_region =  site_region,
+                   age = age_comm$mean_age_per_assemblage,
+                   diversification_model_based = akodon_diversification$insitu_Jetz_harmonic_mean_site,
+                   diversification = akodon_diversification$Jetz_harmonic_mean_site)
+
+map_diversification <- 
+   sites %>% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = diversification)) + 
+   rcartocolor::scale_fill_carto_c(type = "quantitative", palette = "SunsetDark") +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle("A") + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = "DR") +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+     legend.position = "bottom",
+     axis.title = element_blank(),
+     axis.text = element_text(size = 6)
+   )
+
+map_diversification_insitu <- 
+  sites %>% 
+  ggplot2::ggplot() + 
+  ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = diversification_model_based)) + 
+  rcartocolor::scale_fill_carto_c(type = "quantitative",
+                     palette = "SunsetDark", 
+                     direction = 1, 
+                     limits = c(0, 1),  ## max percent overall
+                     breaks = seq(0, 1, by = .25),
+                     labels = glue::glue("{seq(0, 1, by = 0.25)}")) +
+  ggplot2::geom_sf(data = coastline, size = 0.4) +
+  ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+  ggplot2::ggtitle("B") + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(fill = "In situ diversification") +
+  ggplot2::guides(fill = guide_colorbar(barheight = unit(3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    axis.title = element_blank(),
+    legend.text = element_text(size = 6), 
+    axis.text = element_text(size = 8),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+map_diversification_insitu
+```
+## Mapeando a contribuição de diferentes regiões para a composição atual de assembleias
+
+As assembleias são também formadas por processos de dispersão histórica. A função `calc_dispersal_from` possibilita quantificar a porcentagem de linhagens de uma região vindas de outras regiões e se estabeleceram na região atual de ocorrência da linhagem
+
+```{r}
+akodon_dispersal <- 
+Herodotools::calc_dispersal_from(W = akodon_pa_tree,
+               tree = akodon_newick, 
+               ancestral.area = node_area, 
+               biogeo = biogeo_area)
+
+```
+
+Podemos vizualizar espacialmente a contribuição de cada região
+
+```{r}
+sites <- dplyr::bind_cols(site_xy,
+                   site_region =  site_region, 
+                   age = age_comm$mean_age_per_assemblage,
+                   diversification = akodon_diversification$Jetz_harmonic_mean_site,
+                   diversification_model_based = akodon_diversification$insitu_Jetz_harmonic_mean_site,
+                   dispersal.D = akodon_dispersal[,1], 
+                   dispersal.A = akodon_dispersal[, 2],
+                   dispersal.E = akodon_dispersal[, 3],
+                   dispersal.BD = akodon_dispersal[, 4],
+                   dispersal.B = akodon_dispersal[, 5])
+
+map_dispersal_D <- 
+   sites %>% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = dispersal.D)) + 
+      rcartocolor::scale_fill_carto_c(
+      type = "quantitative", palette = "SunsetDark", na.value = "white", limits = c(0,1)
+     ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle("From D") + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = "% of contribution") + 
+   ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+    legend.position = "bottom",
+    axis.title = element_blank(),
+    legend.text = element_text(size = 6), 
+    axis.text = element_text(size = 3),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+map_dispersal_A <- 
+   sites %>% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = dispersal.A)) + 
+      rcartocolor::scale_fill_carto_c(
+     type = "quantitative", palette = "SunsetDark", na.value = "white", limits = c(0,1)
+     ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle("From A") + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = "% of contribution") + 
+  ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+    legend.position = "bottom",
+    axis.title = element_blank(),
+    legend.text = element_text(size = 6), 
+    axis.text = element_text(size = 3),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+map_dispersal_B <- 
+   sites %>% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = dispersal.B)) +
+   rcartocolor::scale_fill_carto_c(
+     type = "quantitative", palette = "SunsetDark", na.value = "white", limits = c(0,1)
+     ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle("From B") + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = "% of\ncontribution") +
+   ggplot2::theme(
+     legend.position = "right",
+     axis.title = element_blank(),
+     legend.text = element_text(size = 6), 
+     axis.text = element_text(size = 3),
+     plot.subtitle = element_text(hjust = 0.5)   
+   )
+```
+
+## Métricas de ecologia filogenética de comunidades considerando distribuição atual e ancestral
+
+Adaptamos métricas clássicas de ecologia filogenética de comunidade para considerar a diversificação in situ em seus cálculos. Especificamente implementamos versões da PD (Phylogenetic diversity) e PE (Phylogenetic endemism), denominadas, respectivamente, PD in situ e PE in situ.
+
+```{r}
+akodon_PD_PE_insitu <- calc_insitu_metrics(W = akodon_pa_tree,
+                  tree = akodon_newick, 
+                  ancestral.area = node_area, 
+                  biogeo = biogeo_area, 
+                  PD = TRUE, 
+                  PE = TRUE)
+```
+Podemos plotar estes valores para vizualizar espacialmente os padrões de diversificação in situ
+
+```{r}
+sites <- dplyr::bind_cols(site_xy,
+                   site_region =  site_region, 
+                   age = age_comm$mean_age_per_assemblage,
+                   diversification = akodon_diversification$Jetz_harmonic_mean_site,
+                   PE = akodon_PD_PE_insitu$PE, 
+                   PEinsitu = akodon_PD_PE_insitu$PEinsitu,
+                   PD = akodon_PD_PE_insitu$PD,
+                   PDinsitu = akodon_PD_PE_insitu$PDinsitu)
+
+map_PE <- 
+   sites %>% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = PE)) + 
+   rcartocolor::scale_fill_carto_c(palette = "SunsetDark", 
+                                  direction = 1, 
+                                  limits = c(0, 0.6),  ## max percent overall
+                                  breaks = seq(0, 0.6, by = .1)
+                                  ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle("A") + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = "PE") +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+     legend.position = "bottom",
+     axis.title = element_blank(),
+     legend.text = element_text(size = 7)
+   )
+
+map_PEinsitu <- 
+   sites %>% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = PEinsitu)) + 
+   rcartocolor::scale_fill_carto_c(palette = "SunsetDark", 
+                                  direction = 1, 
+                                  limits = c(0, 0.6),  ## max percent overall
+                                  breaks = seq(0, 0.6, by = .1)
+                                  ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle("B") + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = "PEinsitu") +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = "mm"),  
+                               direction = "horizontal",
+                               ticks.colour = "grey20",
+                               title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+     legend.position = "bottom",
+     axis.title = element_blank(),
+     legend.text = element_text(size = 7)
+   )
+map_PEinsitu
+```
+
+
+

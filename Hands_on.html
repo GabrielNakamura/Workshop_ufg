@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Gabriel Nakamura" />
+
+<meta name="date" content="2023-05-25" />
+
+<title>Hands on Herodotools</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Introdução ao pacote Herodotools</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Antes de começar</a>
+</li>
+<li>
+  <a href="Hands_on.html">Biogeografia</a>
+</li>
+<li>
+  <a href="Macro_comms.html">Integrando Macroevolução e Comunidades</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Hands on Herodotools</h1>
+<h4 class="author">Gabriel Nakamura</h4>
+<h4 class="date">2023-05-25</h4>
+
+</div>
+
+
+<div id="análises-básicas-usando-o-pacote-herodotools"
+class="section level1">
+<h1>Análises básicas usando o pacote Herodotools</h1>
+<p>Primeiro vamos ler os dados que utilizaremos para as análises. São
+dados de ocorrência de espécies de pequenos roedores do gênero
+Akodon.</p>
+<pre class="r"><code>library(Herodotools)
+library(dplyr)
+library(rnaturalearth)
+data(&quot;akodon_sites&quot;)
+data(&quot;akodon_newick&quot;)</code></pre>
+<p>Vamos fazer alguns processamentos básicos destes dados, apenas para
+separar as coordenadas geográficas dos dados de ocorrência. Em seguida
+plotaremos os padrões de riqueza destes dados, apenas para explorar
+visualmente os dados que estamos trabalhando</p>
+<pre class="r"><code>site_xy &lt;- akodon_sites %&gt;% 
+  dplyr::select(LONG, LAT) 
+
+akodon_pa &lt;- akodon_sites %&gt;% 
+  dplyr::select(-LONG, -LAT)
+
+# checando nomes das espécies na matriz de ocorrência e árvore
+
+spp_in_tree &lt;- names(akodon_pa) %in% akodon_newick$tip.label
+akodon_pa_tree &lt;- akodon_pa[, spp_in_tree]
+
+# plotando os padrões espaciais
+library(ggplot2)
+coastline &lt;- rnaturalearth::ne_coastline(returnclass = &quot;sf&quot;)
+map_limits &lt;- list(
+  x = c(-95, -30),
+  y = c(-55, 12)
+)
+
+richness &lt;- rowSums(akodon_pa_tree)
+
+map_richness &lt;- 
+dplyr::bind_cols(site_xy, richness = richness) %&gt;% 
+  ggplot2::ggplot() + 
+  ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = richness)) + 
+  rcartocolor::scale_fill_carto_c(name = &quot;Richness&quot;, type = &quot;quantitative&quot;, palette = &quot;SunsetDark&quot;) +
+  ggplot2::geom_sf(data = coastline) +
+  ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+  ggplot2::ggtitle(&quot;&quot;) +
+  ggplot2::xlab(&quot;Longitude&quot;) +
+  ggplot2::ylab(&quot;Latitude&quot;) +
+  ggplot2::labs(fill = &quot;Richness&quot;) +
+  ggplot2::theme_bw() +
+  ggplot2::theme(
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), &quot;mm&quot;),
+        legend.text = element_text(size = 12), 
+        axis.text = element_text(size = 7),
+        axis.title.x = element_text(size = 11),
+        axis.title.y = element_text(size = 11)
+        )
+map_richness</code></pre>
+</div>
+<div id="evoregiões" class="section level1">
+<h1>Evoregiões</h1>
+<p>Aqui começamos a utilização das funções do pacote, a primeira a ser
+utilizada será a função <code>calc_evoregions</code> para obtenção de
+evoregiões. Para mais informações sobre evoregiões confira o paper que
+contém a <a
+href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13492">proposta
+original do método</a></p>
+<p><strong>IMPORTANTE</strong> Visto que os nomes das evoregiões são
+atribuídos de maneira aleatória (números de 1 à 5 neste exemplo), a cada
+vez que rodamos esta função as regiões terão nomes distintos. Para
+evitar problemas de reprodutibilidade e garantir que todos tenham os
+mesmos resultados, recomendo que utilizem o resultado pronto desta
+análise. Caso queiram rodar novamente, os resultados das funções
+subsequentes irão mudar, pois precisamos rodar novamente um modelo
+evolutivo para os novos nomes. Isso não quer dizer que os resultados são
+dependentes de cada rodada, apenas que não temos como controlar os nomes
+que são atribuídos a cada região, o padrão sempre vai se manter.</p>
+<pre class="r"><code>load(here::here(&quot;data&quot;, &quot;regions_results.RData&quot;))
+site_region &lt;- regions$Cluster_Evoregions</code></pre>
+<p>Se preferir rodar novamente utilize o código seguinte. Mas lembre-se,
+caso faça isso será necessário rodar um modelo de reconstrução novamente
+para obter os mesmos resultados. Recomendo fazer isso caso esteja
+trabalhando com os seus próprios dados, porém isso pode levar algum
+tempo de processamento.</p>
+<pre class="r"><code>regions &lt;- 
+  Herodotools::calc_evoregions(
+  comm = akodon_pa_tree,
+  phy = akodon_newick
+  )
+
+site_region &lt;- regions$cluster_evoregions</code></pre>
+<p>Podemos explorar um pouco o objeto que retorna da função
+<code>calc_evoregions</code>. Além disso podemos vizualizar
+espacialmente a distribuição destas evoregiões para este conjunto de
+dados</p>
+<pre class="r"><code>evoregion_df &lt;- data.frame(
+  site_xy, 
+  site_region
+)
+
+r_evoregion &lt;- terra::rast(evoregion_df)
+
+# Converting evoregion to a spatial polygon data frame, so it can be plotted
+sf_evoregion &lt;- terra::as.polygons(r_evoregion) %&gt;% 
+  sf::st_as_sf()
+
+
+# Downloading coastline continents and croping to keep only South America
+coastline &lt;- rnaturalearth::ne_coastline(returnclass = &quot;sf&quot;)
+map_limits &lt;- list(
+  x = c(-95, -30),
+  y = c(-55, 12)
+)
+
+# Assigning the same projection to both spatial objects
+sf::st_crs(sf_evoregion) &lt;- sf::st_crs(coastline)
+
+
+# Colours to plot evoregions
+col_five_hues &lt;- c(
+  &quot;#3d291a&quot;,
+  &quot;#a9344f&quot;,
+  &quot;#578a5b&quot;,
+  &quot;#83a6c4&quot;,
+  &quot;#fcc573&quot;
+)
+
+map_evoregion &lt;- 
+  evoregion_df %&gt;% 
+  ggplot2::ggplot() + 
+  ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = site_region)) + 
+  ggplot2::scale_fill_manual(
+    name = &quot;&quot;, 
+    labels = LETTERS[1:5],
+    values = rev(col_five_hues)
+  ) +
+  ggplot2::geom_sf(data = coastline) +
+  ggplot2::geom_sf(
+    data = sf_evoregion, 
+    color = &quot;#040400&quot;,
+    fill = NA, 
+    size = 0.2) +
+  ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+  ggplot2::ggtitle(&quot;&quot;) + 
+  ggplot2::theme_bw() +
+  ggplot2::xlab(&quot;Longitude&quot;) +
+  ggplot2::ylab(&quot;Latitude&quot;) +
+  ggplot2::theme(
+        legend.position = &quot;bottom&quot;,
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), &quot;mm&quot;),
+        legend.text = element_text(size = 12), 
+        axis.text = element_text(size = 7),
+        axis.title.x = element_text(size = 11),
+        axis.title.y = element_text(size = 11)
+        )
+map_evoregion</code></pre>
+<p>Lembre-se, caso tenha rodado novamente a função para calculo das
+evoregiões, os nomes serão distintos do que estão vendo nesta
+figura.</p>
+<div id="calculando-graus-de-afiliação" class="section level2">
+<h2>Calculando graus de afiliação</h2>
+<p>Podemos utilizar o resultado anterior para calcular os graus de
+afiliação de cada célula para a região na qual foi classificada. Os
+graus de afiliação nada mais são que o grau de proximidade da célula
+para o centróide da região na qual foi alocada. Este calculo pode ser
+realizado com qualquer análise de regionalização/classificação. Aqui
+faremos com os resultados que vieram das evoregiões</p>
+<pre class="r"><code># Selecting only axis with more than 5% of explained variance from evoregion output
+axis_sel &lt;- which(regions$PCPS$prop_explainded &gt;= regions$PCPS$tresh_dist)
+PCPS_thresh &lt;- regions$PCPS$vectors[, axis_sel] 
+
+# distance matrix using 4 significant PCPS axis accordingly to the 5% threshold 
+dist_phylo_PCPS &lt;- vegan::vegdist(PCPS_thresh, method = &quot;euclidean&quot;)
+
+# calculating affiliation values for each assemblage 
+afi &lt;- 
+  Herodotools::calc_affiliation_evoreg(phylo.comp.dist = dist_phylo_PCPS,
+                          groups = site_region) 
+
+# binding the information in a data frame
+sites &lt;- dplyr::bind_cols(site_xy, site_region =  site_region, afi)</code></pre>
+<p>Podemos plotar esses valores de filiação espacialmente. Esses valores
+podem também ser utilizados para outros fins.</p>
+<pre class="r"><code>map_joint_evoregion_afilliation &lt;- 
+   evoregion_df %&gt;% 
+   ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = site_region), 
+               alpha = sites[, &quot;afilliation&quot;]) + 
+   ggplot2::scale_fill_manual(
+     name = &quot;&quot;, 
+     labels = LETTERS[1:5],
+     values = rev(col_five_hues)
+   ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::geom_sf(
+     data = sf_evoregion, 
+     color = rev(col_five_hues),
+     fill = NA, 
+     size = 0.7) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;&quot;) + 
+   guides(guide_legend(direction = &quot;vertical&quot;)) +
+   ggplot2::theme_bw() +
+  ggplot2::xlab(&quot;Longitude&quot;) +
+  ggplot2::ylab(&quot;Latitude&quot;) +
+  ggplot2::theme(
+        legend.position = &quot;bottom&quot;,
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), &quot;mm&quot;),
+        legend.text = element_text(size = 10), 
+        axis.text = element_text(size = 8),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10)
+        )</code></pre>
+</div>
+</div>
+<div id="integrando-modelos-macroevolutivos-e-dados-de-assembleias"
+class="section level1">
+<h1>Integrando modelos macroevolutivos e dados de assembleias</h1>
+<p>A partir desta seção você vai encontrar métodos que integram modelos
+macroevolutivos e dados de ocorrência de espécies em assembleias. Para
+isso precisaremos de dados que retornam de modelos macroevolutivos de
+reconstrução de área ancestral. Por enquanato o Herodotools é capaz de
+lidar apenas com resultados que retornam dos modelos de reconstrução
+vindos do pacote {<code>BioGeoBEARS</code>}</p>
+<p>Visto que o modelo de reconstrução de áreas ancestrais pode demorar
+para rodar, vamos ler um modelo pronto apenas para fins didáticos. Neste
+modelo reconstruímos as evoregiões para os nós ancestrais das espécies
+de Akodon utilizadas anteriormente</p>
+<pre class="r"><code>library(BioGeoBEARS)
+load(file = system.file(&quot;extdata&quot;, &quot;resDEC_akodon.RData&quot;, package = &quot;Herodotools&quot;)) </code></pre>
+<p>Caso queira construir seu próprio modelo de reconstrução de áreas
+ancestrais utilizando o BioGeoBEARS, o pacote Herodotools apresenta
+algumas funções auxiliares para obtenção de dados nos formatos
+necessários para o BioGeoBEARS. Por exemplo, precisamos de um objeto que
+informe a ocorrência de cada espécies em cada região (ou evoregião).
+Para tanto, podemos utilizar a seguinte função auxiliar:</p>
+<pre class="r"><code>a_region &lt;- Herodotools::get_region_occ(comm = akodon_pa_tree, site.region = site_region)</code></pre>
+<p>O objeto resultante desta função é uma matriz que contém as espécies
+nas linhas e as regiões nas colunas. Zeros e Uns indicam a ausência e
+presença destas espécies em cada região. Este objeto pode ser utilizado
+em conjunto com outra função auxiliar do Herodotools para obtenção de
+outro objeto importante em análises de reconstrução de áres ancestrais
+chamado arquivo <a
+href="http://scikit-bio.org/docs/0.2.3/generated/skbio.io.phylip.html">Phyllip</a></p>
+<pre class="r"><code>Herodotools::get_tipranges_to_BioGeoBEARS(
+  a_region, 
+  # please set a new path to save the file
+  filename = here::here(&quot;data&quot;, &quot;geo_area_akodon.data&quot;),
+  areanames = NULL
+  )</code></pre>
+<p>Confira o arquivo Phyllip gerado, e que agora foi salvo no seu
+workspace.</p>
+<p>A partir de agora vamos calcular métricas implementadas no pacote que
+integram tanto o dado de ocorrência atual com o dado do modelo de
+reconstrução de áreas ancestrais obtidos a partir da reconstrução das
+evoregiões (lembrando que esta reconstrução poderia ser feita com outro
+tipo de dado biogeográfico)</p>
+<div id="idade-de-comunidades" class="section level2">
+<h2>Idade de comunidades</h2>
+<p>Vamos inciar calculando a idade das assembleias considerando a
+distribuição presente e passada das linhagens. Para mais informação
+sobre como esta métrica pode ser utilizada, dê uma olhada <a
+href="https://academic.oup.com/biolinnean/article-abstract/134/1/57/6297962">nesse
+artigo</a></p>
+<pre class="r"><code>biogeo_area &lt;- data.frame(biogeo = chartr(&quot;12345&quot;, &quot;ABCDE&quot;, evoregion_df$site_region)) 
+
+# getting the ancestral range area for each node 
+node_area &lt;- 
+  Herodotools::get_node_range_BioGeoBEARS(
+    resDEC,
+    phyllip.file = here::here(&quot;data&quot;, &quot;geo_area_akodon.data&quot;),
+    akodon_newick,
+    max.range.size = 4 
+  )
+
+# calculating age arrival 
+age_comm &lt;- Herodotools::calc_age_arrival(W = akodon_pa_tree, 
+                        tree = akodon_newick, 
+                        ancestral.area = node_area, 
+                        biogeo = biogeo_area) </code></pre>
+<p>Podemos vizualizar a distribuição espacial das idades</p>
+<pre class="r"><code>sites &lt;- dplyr::bind_cols(site_xy, site_region =  site_region, age = age_comm$mean_age_per_assemblage)
+
+map_age &lt;- 
+  sites %&gt;% 
+  ggplot() + 
+  ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = mean_age_arrival)) + 
+  rcartocolor::scale_fill_carto_c(type = &quot;quantitative&quot;, 
+                     palette = &quot;SunsetDark&quot;,
+                     direction = 1, 
+                     limits = c(0, 3.5),  ## max percent overall
+                     breaks = seq(0, 3.5, by = .5),
+                     labels = glue::glue(&quot;{seq(0, 3.5, by = 0.5)}&quot;)) +
+  ggplot2::geom_sf(data = coastline, size = 0.4) +
+  ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+  ggplot2::ggtitle(&quot;&quot;) + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(fill = &quot;Mean age (Myr)&quot;) +
+  ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+  ggplot2::theme(
+        legend.position = &quot;bottom&quot;,
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), &quot;mm&quot;),
+        legend.text = element_text(size = 9), 
+        axis.text = element_text(size = 8),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
+        plot.subtitle = element_text(hjust = 0.5)
+        )
+map_age</code></pre>
+</div>
+<div id="diversificação-in-situ" class="section level2">
+<h2>Diversificação in-situ</h2>
+<p>Outra nova métrica que integra a distribuição passada e presente das
+espécies em nível de assembleias é a <strong>Diversificação
+in-situ</strong>. Esta métrica é uma simples modificação da métrica DR
+(obtida a partir do inverso do equal-splits), que considera apenas a
+porção de diversificação que ocorreu <strong>dentro</strong> de uma
+região.</p>
+<pre class="r"><code>akodon_diversification &lt;- 
+Herodotools::calc_insitu_diversification(W = akodon_pa_tree,
+                   tree = akodon_newick, 
+                   ancestral.area = node_area, 
+                   biogeo = biogeo_area, 
+                   diversification = &quot;jetz&quot;,
+                   type = &quot;equal.splits&quot;)</code></pre>
+<p>Podemos vizualizar os padrões espaciais de diversificação in-situ. A
+função contém tanto a métrica original quanto a versão modificada que
+considera apenas a diversificação in-situ</p>
+<pre class="r"><code>sites &lt;- dplyr::bind_cols(site_xy,
+                   site_region =  site_region,
+                   age = age_comm$mean_age_per_assemblage,
+                   diversification_model_based = akodon_diversification$insitu_Jetz_harmonic_mean_site,
+                   diversification = akodon_diversification$Jetz_harmonic_mean_site)
+
+map_diversification &lt;- 
+   sites %&gt;% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = diversification)) + 
+   rcartocolor::scale_fill_carto_c(type = &quot;quantitative&quot;, palette = &quot;SunsetDark&quot;) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;A&quot;) + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = &quot;DR&quot;) +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+     legend.position = &quot;bottom&quot;,
+     axis.title = element_blank(),
+     axis.text = element_text(size = 6)
+   )
+
+map_diversification_insitu &lt;- 
+  sites %&gt;% 
+  ggplot2::ggplot() + 
+  ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = diversification_model_based)) + 
+  rcartocolor::scale_fill_carto_c(type = &quot;quantitative&quot;,
+                     palette = &quot;SunsetDark&quot;, 
+                     direction = 1, 
+                     limits = c(0, 1),  ## max percent overall
+                     breaks = seq(0, 1, by = .25),
+                     labels = glue::glue(&quot;{seq(0, 1, by = 0.25)}&quot;)) +
+  ggplot2::geom_sf(data = coastline, size = 0.4) +
+  ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+  ggplot2::ggtitle(&quot;B&quot;) + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(fill = &quot;In situ diversification&quot;) +
+  ggplot2::guides(fill = guide_colorbar(barheight = unit(3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+  ggplot2::theme(
+    legend.position = &quot;bottom&quot;,
+    axis.title = element_blank(),
+    legend.text = element_text(size = 6), 
+    axis.text = element_text(size = 8),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+map_diversification_insitu</code></pre>
+</div>
+<div
+id="mapeando-a-contribuição-de-diferentes-regiões-para-a-composição-atual-de-assembleias"
+class="section level2">
+<h2>Mapeando a contribuição de diferentes regiões para a composição
+atual de assembleias</h2>
+<p>As assembleias são também formadas por processos de dispersão
+histórica. A função <code>calc_dispersal_from</code> possibilita
+quantificar a porcentagem de linhagens de uma região vindas de outras
+regiões e se estabeleceram na região atual de ocorrência da linhagem</p>
+<pre class="r"><code>akodon_dispersal &lt;- 
+Herodotools::calc_dispersal_from(W = akodon_pa_tree,
+               tree = akodon_newick, 
+               ancestral.area = node_area, 
+               biogeo = biogeo_area)</code></pre>
+<p>Podemos vizualizar espacialmente a contribuição de cada região</p>
+<pre class="r"><code>sites &lt;- dplyr::bind_cols(site_xy,
+                   site_region =  site_region, 
+                   age = age_comm$mean_age_per_assemblage,
+                   diversification = akodon_diversification$Jetz_harmonic_mean_site,
+                   diversification_model_based = akodon_diversification$insitu_Jetz_harmonic_mean_site,
+                   dispersal.D = akodon_dispersal[,1], 
+                   dispersal.A = akodon_dispersal[, 2],
+                   dispersal.E = akodon_dispersal[, 3],
+                   dispersal.BD = akodon_dispersal[, 4],
+                   dispersal.B = akodon_dispersal[, 5])
+
+map_dispersal_D &lt;- 
+   sites %&gt;% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = dispersal.D)) + 
+      rcartocolor::scale_fill_carto_c(
+      type = &quot;quantitative&quot;, palette = &quot;SunsetDark&quot;, na.value = &quot;white&quot;, limits = c(0,1)
+     ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;From D&quot;) + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = &quot;% of contribution&quot;) + 
+   ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+    legend.position = &quot;bottom&quot;,
+    axis.title = element_blank(),
+    legend.text = element_text(size = 6), 
+    axis.text = element_text(size = 3),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+map_dispersal_A &lt;- 
+   sites %&gt;% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = dispersal.A)) + 
+      rcartocolor::scale_fill_carto_c(
+     type = &quot;quantitative&quot;, palette = &quot;SunsetDark&quot;, na.value = &quot;white&quot;, limits = c(0,1)
+     ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;From A&quot;) + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = &quot;% of contribution&quot;) + 
+  ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+    legend.position = &quot;bottom&quot;,
+    axis.title = element_blank(),
+    legend.text = element_text(size = 6), 
+    axis.text = element_text(size = 3),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+map_dispersal_B &lt;- 
+   sites %&gt;% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = dispersal.B)) +
+   rcartocolor::scale_fill_carto_c(
+     type = &quot;quantitative&quot;, palette = &quot;SunsetDark&quot;, na.value = &quot;white&quot;, limits = c(0,1)
+     ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;From B&quot;) + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = &quot;% of\ncontribution&quot;) +
+   ggplot2::theme(
+     legend.position = &quot;right&quot;,
+     axis.title = element_blank(),
+     legend.text = element_text(size = 6), 
+     axis.text = element_text(size = 3),
+     plot.subtitle = element_text(hjust = 0.5)   
+   )</code></pre>
+</div>
+<div
+id="métricas-de-ecologia-filogenética-de-comunidades-considerando-distribuição-atual-e-ancestral"
+class="section level2">
+<h2>Métricas de ecologia filogenética de comunidades considerando
+distribuição atual e ancestral</h2>
+<p>Adaptamos métricas clássicas de ecologia filogenética de comunidade
+para considerar a diversificação in situ em seus cálculos.
+Especificamente implementamos versões da PD (Phylogenetic diversity) e
+PE (Phylogenetic endemism), denominadas, respectivamente, PD in situ e
+PE in situ.</p>
+<pre class="r"><code>akodon_PD_PE_insitu &lt;- calc_insitu_metrics(W = akodon_pa_tree,
+                  tree = akodon_newick, 
+                  ancestral.area = node_area, 
+                  biogeo = biogeo_area, 
+                  PD = TRUE, 
+                  PE = TRUE)</code></pre>
+<p>Podemos plotar estes valores para vizualizar espacialmente os padrões
+de diversificação in situ</p>
+<pre class="r"><code>sites &lt;- dplyr::bind_cols(site_xy,
+                   site_region =  site_region, 
+                   age = age_comm$mean_age_per_assemblage,
+                   diversification = akodon_diversification$Jetz_harmonic_mean_site,
+                   PE = akodon_PD_PE_insitu$PE, 
+                   PEinsitu = akodon_PD_PE_insitu$PEinsitu,
+                   PD = akodon_PD_PE_insitu$PD,
+                   PDinsitu = akodon_PD_PE_insitu$PDinsitu)
+
+map_PE &lt;- 
+   sites %&gt;% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = PE)) + 
+   rcartocolor::scale_fill_carto_c(palette = &quot;SunsetDark&quot;, 
+                                  direction = 1, 
+                                  limits = c(0, 0.6),  ## max percent overall
+                                  breaks = seq(0, 0.6, by = .1)
+                                  ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;A&quot;) + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = &quot;PE&quot;) +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+     legend.position = &quot;bottom&quot;,
+     axis.title = element_blank(),
+     legend.text = element_text(size = 7)
+   )
+
+map_PEinsitu &lt;- 
+   sites %&gt;% 
+   ggplot2::ggplot() + 
+   ggplot2::geom_raster(ggplot2::aes(x = LONG, y = LAT, fill = PEinsitu)) + 
+   rcartocolor::scale_fill_carto_c(palette = &quot;SunsetDark&quot;, 
+                                  direction = 1, 
+                                  limits = c(0, 0.6),  ## max percent overall
+                                  breaks = seq(0, 0.6, by = .1)
+                                  ) +
+   ggplot2::geom_sf(data = coastline, size = 0.4) +
+   ggplot2::coord_sf(xlim = map_limits$x, ylim = map_limits$y) +
+   ggplot2::ggtitle(&quot;B&quot;) + 
+   ggplot2::theme_bw() +
+   ggplot2::labs(fill = &quot;PEinsitu&quot;) +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = &quot;mm&quot;),  
+                               direction = &quot;horizontal&quot;,
+                               ticks.colour = &quot;grey20&quot;,
+                               title.position = &quot;top&quot;,
+                               label.position = &quot;bottom&quot;,
+                               title.hjust = 0.5)) +
+   ggplot2::theme(
+     legend.position = &quot;bottom&quot;,
+     axis.title = element_blank(),
+     legend.text = element_text(size = 7)
+   )
+map_PEinsitu</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
