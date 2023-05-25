@@ -9,5 +9,8 @@ navbar:
       href: Hands_on.html
     - text: "Integrando Macroevolução e Comunidades"
       href: Macro_comms.html
+    - text: "Dinâmica macroevolutiva de atributos em comunidades"
+      href: dinam_atributos.html
+
 
      

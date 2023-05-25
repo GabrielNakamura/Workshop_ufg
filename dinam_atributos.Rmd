@@ -1,0 +1,140 @@
+---
+title: "Dinâmica macroevolutiva de atributos"
+author: "Gabriel Nakamura"
+date: "2023-05-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# Integrando modelos macroevolutivos e dinâmica de atributos
+
+Veremos agora como integrar métodos de reconstrução de atributos de espécies (atributos categóricos), com dados de comunidades. Calcularemos três métricas desenvolvidas por [Luza et al (2021)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.8476) e implementadas no pacote Herodotools.
+
+Para isso vamos utilizar um outro conjunto de dados
+
+```{r}
+data("rodent_phylo")
+data("trait")
+```
+
+Vamos calcular três métricas, são elas:
+
+- Taxa de transição
+
+- Stasis
+
+- Tempo da última transição
+
+```{r}
+# run `calc_tip_based_trait_evo` function 
+trans_rates <- Herodotools::calc_tip_based_trait_evo(tree = match_data$phy,
+                                   trait = trait , # need to be named to work
+                                   nsim = 50,
+                                   method = c("transition_rates",
+                                              "last_transition_time",
+                                              "stasis_time")
+                                   )
+  
+```
+
+
+Visto que esta análise leva um certo tempo, vamos ler o resultado dela para entender o que retorna
+
+```{r}
+load(system.file("extdata", "transition_rate_res.RData", package = "Herodotools"))
+```
+
+Estes dados podem ser projetados no espaço geográfico da seguinte maneira
+
+```{r}
+
+# load community data
+comm_data <- read.table(
+   system.file("extdata", "PresAbs_228sp_Neotropical_MainDataBase_Ordenado.txt", 
+               package = "Herodotools"),
+   header = T, sep = "\t"
+   )
+
+# load latlong of these communities
+geo_data <- read.table(
+  system.file("extdata", "Lon-lat-Disparity.txt", package = "Herodotools"),
+  header = T, sep = "\t"
+  )
+
+data("averaged_rates")
+
+
+# prepare data to map
+data_to_map_wide <- data.frame(geo_data[,c("LONG", "LAT")], averaged_rates)
+
+data_to_map_long <- 
+  data_to_map_wide %>% 
+  tidyr::pivot_longer(
+    cols = 3:5,
+    names_to = "variables",
+    values_to = "values"
+  )
+
+# create a list with the maps
+list_map_transitions <- lapply(unique(data_to_map_long$variables), function(metric){
+  
+  plot.title <- switch(
+    metric,
+    "prop.transitions" = "Transition Rates",
+    "stasis.time" = "Stasis Time",
+    "last.transition.time" = "Last Transition Time"
+  )
+  
+  sel_data <- 
+    data_to_map_long %>% 
+    dplyr::filter(variables == metric)
+  
+  var_range <- range(sel_data$values) %>% round(2)
+  var_breaks <- seq(var_range[1], var_range[2], diff(var_range/4)) %>% round(2)
+  
+  sig_map_limits <- list(
+    x = range(sel_data$LONG), 
+    y = range(sel_data$LAT)
+  )
+  
+  ggplot() +
+    ggplot2::geom_tile(data = sel_data, 
+                ggplot2::aes(x = LONG, y = LAT, fill = values)) +
+    rcartocolor::scale_fill_carto_c(
+      type = "quantitative", 
+      palette = "SunsetDark", 
+      na.value = "white", 
+      limits = var_range, 
+      breaks = var_breaks
+    )+ 
+    ggplot2::geom_sf(data = coastline, size = 0.4) +
+    ggplot2::coord_sf(xlim = sig_map_limits$x, ylim = sig_map_limits$y) +
+    ggplot2::theme_bw() +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = "mm"),  
+                                 direction = "horizontal",
+                                 ticks.colour = "grey20",
+                                 title.position = "top",
+                                 label.position = "bottom",
+                                 title.hjust = 0.5)) +
+    ggplot2::labs(title = plot.title) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      axis.title = element_blank(),
+      legend.title = element_blank(),
+      legend.text = element_text(size = 7), 
+      axis.text = element_text(size = 7),
+      plot.subtitle = element_text(hjust = 0.5)   
+    )
+  
+})
+
+# Create map
+mapTransition_rate <- patchwork::wrap_plots(list_map_transitions) +
+  patchwork::plot_annotation(tag_levels = "A")
+```
+
+
+

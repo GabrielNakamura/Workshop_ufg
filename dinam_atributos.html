@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Gabriel Nakamura" />
 
+<meta name="date" content="2023-05-25" />
 
-<title>Workshop Herodotools</title>
+<title>Dinâmica macroevolutiva de atributos</title>
 
 <script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -266,67 +268,126 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Workshop Herodotools</h1>
+<h1 class="title toc-ignore">Dinâmica macroevolutiva de atributos</h1>
+<h4 class="author">Gabriel Nakamura</h4>
+<h4 class="date">2023-05-25</h4>
 
 </div>
 
 
-<p>Olá!</p>
-<p>Obrigado pelo seu interesse no workshop sobre o pacote
-Herodotools!</p>
-<p>Aqui estão algumas informações importantes para antes e durante o
-workshop.</p>
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-<p><img src="figs/logo_herodotools.png" alt="package logo with a map and a phylogeny inside" width="250px" align="right"/></p>
-<div id="download" class="section level1">
-<h1>Download</h1>
-<p>Para instação da última versão do pacote siga os passos
-seguintes:</p>
-<pre class="r"><code>if (!requireNamespace(&quot;devtools&quot;, quietly = TRUE)){
-    install.packages(&quot;devtools&quot;)
-  }
-devtools::install_github(&quot;GabrielNakamura/Herodotools&quot;)</code></pre>
-<p>Recomendo instalar também alguns pacotes adicionais. Caso já os
-tenha, os pacotes não serão instalados novamente.</p>
-<pre class="r"><code>libs &lt;- c(&quot;ape&quot;, &quot;picante&quot;, &quot;dplyr&quot;, &quot;tidyr&quot;, &quot;purrr&quot;,
-          &quot;raster&quot;, &quot;terra&quot;, &quot;ggplot2&quot;, &quot;stringr&quot;,
-          &quot;here&quot;, &quot;sf&quot;, &quot;rnaturalearth&quot;, &quot;rcartocolor&quot;, &quot;patchwork&quot;)
-if (!requireNamespace(libs, quietly = TRUE)){
-    install.packages(libs)
-  }
-</code></pre>
-<p>Alguns pacotes necesssário não estão na cran. Apesar de serem
-dependências do Herodotools, em caso de problemas na instalação,
-recomendo baixar estes pacotes primeiro e em seguidar repetir o download
-do Herodotools</p>
-<pre class="r"><code>if (!requireNamespace(c(&quot;daee&quot;,&quot;BioGeoBEARS&quot;), quietly = TRUE)){
-  devtools::install_github(&quot;vanderleidebastiani/daee&quot;)
-  devtools::install_github(&quot;nmatzke/BioGeoBEARS&quot;)
-}
-library(daee)
-library(BioGeoBEARS)</code></pre>
-<p>Por fim, por favor, se possível façam o download deste repositório no
-seu computador. Isso ajudará no acompanhamento da parte prática do
-workshop. Para fazer o download é só digitar o seguinte código:</p>
-<pre class="r"><code>download.file(url = &quot;https://github.com/GabrielNakamura/Workshop_ufg/archive/master.zip&quot;, destfile = &quot;workshop_herodotools.zip&quot;)
+<div id="integrando-modelos-macroevolutivos-e-dinâmica-de-atributos"
+class="section level1">
+<h1>Integrando modelos macroevolutivos e dinâmica de atributos</h1>
+<p>Veremos agora como integrar métodos de reconstrução de atributos de
+espécies (atributos categóricos), com dados de comunidades. Calcularemos
+três métricas desenvolvidas por <a
+href="https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.8476">Luza
+et al (2021)</a> e implementadas no pacote Herodotools.</p>
+<p>Para isso vamos utilizar um outro conjunto de dados</p>
+<pre class="r"><code>data(&quot;rodent_phylo&quot;)
+data(&quot;trait&quot;)</code></pre>
+<p>Vamos calcular três métricas, são elas:</p>
+<ul>
+<li><p>Taxa de transição</p></li>
+<li><p>Stasis</p></li>
+<li><p>Tempo da última transição</p></li>
+</ul>
+<pre class="r"><code># run `calc_tip_based_trait_evo` function 
+trans_rates &lt;- Herodotools::calc_tip_based_trait_evo(tree = match_data$phy,
+                                   trait = trait , # need to be named to work
+                                   nsim = 50,
+                                   method = c(&quot;transition_rates&quot;,
+                                              &quot;last_transition_time&quot;,
+                                              &quot;stasis_time&quot;)
+                                   )</code></pre>
+<p>Visto que esta análise leva um certo tempo, vamos ler o resultado
+dela para entender o que retorna</p>
+<pre class="r"><code>load(system.file(&quot;extdata&quot;, &quot;transition_rate_res.RData&quot;, package = &quot;Herodotools&quot;))</code></pre>
+<p>Estes dados podem ser projetados no espaço geográfico da seguinte
+maneira</p>
+<pre class="r"><code># load community data
+comm_data &lt;- read.table(
+   system.file(&quot;extdata&quot;, &quot;PresAbs_228sp_Neotropical_MainDataBase_Ordenado.txt&quot;, 
+               package = &quot;Herodotools&quot;),
+   header = T, sep = &quot;\t&quot;
+   )
 
-# para descomprimir a pasta
+# load latlong of these communities
+geo_data &lt;- read.table(
+  system.file(&quot;extdata&quot;, &quot;Lon-lat-Disparity.txt&quot;, package = &quot;Herodotools&quot;),
+  header = T, sep = &quot;\t&quot;
+  )
 
-unzip(zipfile = &quot;workshop_herodotools.zip&quot;)
-</code></pre>
-</div>
-<div id="informações-adicionais" class="section level1">
-<h1>Informações adicionais</h1>
-<p>Para mais detalhes sobre o pacote, por favor, visite <a
-href="https://gabrielnakamura.github.io/Herodotools/">a página do
-Herodotools</a></p>
-</div>
-<div id="autores" class="section level1">
-<h1>Autores</h1>
-<p><a
-href="https://buscatextual.cnpq.br/buscatextual/visualizacv.do?id=K4436271D5&amp;tokenCaptchar=03AL8dmw_ahjC34vwiKCSxy42OB3unBotZDRIrrc8u8U29BxtsinGbZpxrvh2Q6RkwudID5lIHbcMRIOafoAomRTIe3PDnqDXahAsfUkWLxCIEVy1Lt3x21uYyJmDMl_9ktOEu9twdFHvbBSR5QVo3taKJBlcGzdxx_aUrFyZsEIq-IaipNrs6L4W6HRzT_mdfUCZefAfbXHLJbXRCZ-Zw9qyGdRg495V-zqIIQsnay_oHEC8AczWL_cjMEdo5Xn-AanEzj_NyR9hntORXM2zQggWeRq5g0HACoI5_QlAdz4Wvs3sV5rvGO_6NS4TWzSig66lJC-C2mjdJMiFXH1SAJyMbSn2DR6BJqtE-xJnQrXaLnuqyL4RUnj8B_C8fICjkoQ_7DSHhPy3_uYeOUlb01WCVyx5SYkChtCG8lfjzaEsmSjKRsLCBnTRzQptL6T4kP6uHgxAXUWbLfHH8xpGlhj7Et9SPRKXL7ShQwFTySJSv1Vwo-CFsgDn3MkWaZk4VTQYmbFJq9PfudWxY3fWa9XwJbY8_8Ojyf-n5_WO5CAF-MeFcawqqRIw">Gabriel
-Nakamura</a>, Arthur Rodrigues, André Luza, Renan Maestri, Vanderlei
-Debastiani and Leandro Duarte</p>
+data(&quot;averaged_rates&quot;)
+
+
+# prepare data to map
+data_to_map_wide &lt;- data.frame(geo_data[,c(&quot;LONG&quot;, &quot;LAT&quot;)], averaged_rates)
+
+data_to_map_long &lt;- 
+  data_to_map_wide %&gt;% 
+  tidyr::pivot_longer(
+    cols = 3:5,
+    names_to = &quot;variables&quot;,
+    values_to = &quot;values&quot;
+  )
+
+# create a list with the maps
+list_map_transitions &lt;- lapply(unique(data_to_map_long$variables), function(metric){
+  
+  plot.title &lt;- switch(
+    metric,
+    &quot;prop.transitions&quot; = &quot;Transition Rates&quot;,
+    &quot;stasis.time&quot; = &quot;Stasis Time&quot;,
+    &quot;last.transition.time&quot; = &quot;Last Transition Time&quot;
+  )
+  
+  sel_data &lt;- 
+    data_to_map_long %&gt;% 
+    dplyr::filter(variables == metric)
+  
+  var_range &lt;- range(sel_data$values) %&gt;% round(2)
+  var_breaks &lt;- seq(var_range[1], var_range[2], diff(var_range/4)) %&gt;% round(2)
+  
+  sig_map_limits &lt;- list(
+    x = range(sel_data$LONG), 
+    y = range(sel_data$LAT)
+  )
+  
+  ggplot() +
+    ggplot2::geom_tile(data = sel_data, 
+                ggplot2::aes(x = LONG, y = LAT, fill = values)) +
+    rcartocolor::scale_fill_carto_c(
+      type = &quot;quantitative&quot;, 
+      palette = &quot;SunsetDark&quot;, 
+      na.value = &quot;white&quot;, 
+      limits = var_range, 
+      breaks = var_breaks
+    )+ 
+    ggplot2::geom_sf(data = coastline, size = 0.4) +
+    ggplot2::coord_sf(xlim = sig_map_limits$x, ylim = sig_map_limits$y) +
+    ggplot2::theme_bw() +
+    ggplot2::guides(fill = guide_colorbar(barheight = unit(2.3, units = &quot;mm&quot;),  
+                                 direction = &quot;horizontal&quot;,
+                                 ticks.colour = &quot;grey20&quot;,
+                                 title.position = &quot;top&quot;,
+                                 label.position = &quot;bottom&quot;,
+                                 title.hjust = 0.5)) +
+    ggplot2::labs(title = plot.title) +
+    ggplot2::theme(
+      legend.position = &quot;bottom&quot;,
+      axis.title = element_blank(),
+      legend.title = element_blank(),
+      legend.text = element_text(size = 7), 
+      axis.text = element_text(size = 7),
+      plot.subtitle = element_text(hjust = 0.5)   
+    )
+  
+})
+
+# Create map
+mapTransition_rate &lt;- patchwork::wrap_plots(list_map_transitions) +
+  patchwork::plot_annotation(tag_levels = &quot;A&quot;)</code></pre>
 </div>
 
 
