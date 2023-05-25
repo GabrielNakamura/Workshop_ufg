@@ -1,5 +1,5 @@
 ---
-title: "Hands on Herodotools"
+title: "Introdução ao pacote Herodotools"
 author: "Gabriel Nakamura"
 date: "2023-05-25"
 output: html_document
