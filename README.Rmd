@@ -78,7 +78,7 @@ Para mais detalhes sobre o pacote, por favor, visite [a página do Herodotools](
 [Gabriel Nakamura](https://buscatextual.cnpq.br/buscatextual/visualizacv.do?id=K4436271D5&tokenCaptchar=03AL8dmw_ahjC34vwiKCSxy42OB3unBotZDRIrrc8u8U29BxtsinGbZpxrvh2Q6RkwudID5lIHbcMRIOafoAomRTIe3PDnqDXahAsfUkWLxCIEVy1Lt3x21uYyJmDMl_9ktOEu9twdFHvbBSR5QVo3taKJBlcGzdxx_aUrFyZsEIq-IaipNrs6L4W6HRzT_mdfUCZefAfbXHLJbXRCZ-Zw9qyGdRg495V-zqIIQsnay_oHEC8AczWL_cjMEdo5Xn-AanEzj_NyR9hntORXM2zQggWeRq5g0HACoI5_QlAdz4Wvs3sV5rvGO_6NS4TWzSig66lJC-C2mjdJMiFXH1SAJyMbSn2DR6BJqtE-xJnQrXaLnuqyL4RUnj8B_C8fICjkoQ_7DSHhPy3_uYeOUlb01WCVyx5SYkChtCG8lfjzaEsmSjKRsLCBnTRzQptL6T4kP6uHgxAXUWbLfHH8xpGlhj7Et9SPRKXL7ShQwFTySJSv1Vwo-CFsgDn3MkWaZk4VTQYmbFJq9PfudWxY3fWa9XwJbY8_8Ojyf-n5_WO5CAF-MeFcawqqRIw), Arthur Rodrigues, André Luza, Renan Maestri, Vanderlei Debastiani and Leandro Duarte
 
 
-Para acessar os scripts que utilizaremos durante o workshop [clique aqui](https://gabrielnakamura.github.io/workshop_ufg_Herodotools/)
+Para acessar os scripts que utilizaremos durante o workshop [clique aqui](https://gabrielnakamura.github.io/Workshop_ufg/)
 
 
 

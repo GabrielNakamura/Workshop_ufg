@@ -71,4 +71,4 @@ Arthur Rodrigues, André Luza, Renan Maestri, Vanderlei Debastiani and
 Leandro Duarte
 
 Para acessar os scripts que utilizaremos durante o workshop [clique
-aqui](https://gabrielnakamura.github.io/workshop_ufg_Herodotools/)
+aqui](https://gabrielnakamura.github.io/Workshop_ufg/)
