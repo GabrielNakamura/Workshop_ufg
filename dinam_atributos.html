@@ -283,7 +283,10 @@ espécies (atributos categóricos), com dados de comunidades. Calcularemos
 três métricas desenvolvidas por <a
 href="https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.8476">Luza
 et al (2021)</a> e implementadas no pacote Herodotools.</p>
-<p>Para isso vamos utilizar um outro conjunto de dados</p>
+<p>Para isso vamos utilizar um outro conjunto de dados que compreende
+214 espécies de roedores sigmodontídeos. Antes de iniciar os códigos,
+vamos apreciar a fofura dos sigmodontideos</p>
+<p><img src="figs/sigmodontideos.jpeg" width="138" /></p>
 <pre class="r"><code>data(&quot;rodent_phylo&quot;)
 data(&quot;trait&quot;)</code></pre>
 <p>Vamos calcular três métricas, são elas:</p>
@@ -292,6 +295,9 @@ data(&quot;trait&quot;)</code></pre>
 <li><p>Stasis</p></li>
 <li><p>Tempo da última transição</p></li>
 </ul>
+<p>O método de reconstrução utilizado aqui é o <a
+href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-88">Mapeamento
+Estocástico de Caracteres</a></p>
 <pre class="r"><code># run `calc_tip_based_trait_evo` function 
 trans_rates &lt;- Herodotools::calc_tip_based_trait_evo(tree = match_data$phy,
                                    trait = trait , # need to be named to work
@@ -302,7 +308,8 @@ trans_rates &lt;- Herodotools::calc_tip_based_trait_evo(tree = match_data$phy,
                                    )</code></pre>
 <p>Visto que esta análise leva um certo tempo, vamos ler o resultado
 dela para entender o que retorna</p>
-<pre class="r"><code>load(system.file(&quot;extdata&quot;, &quot;transition_rate_res.RData&quot;, package = &quot;Herodotools&quot;))</code></pre>
+<pre class="r"><code>load(system.file(&quot;extdata&quot;, &quot;transition_rate_res.RData&quot;, package = &quot;Herodotools&quot;))
+View(trans_rates)</code></pre>
 <p>Estes dados podem ser projetados no espaço geográfico da seguinte
 maneira</p>
 <pre class="r"><code># load community data
@@ -318,8 +325,29 @@ geo_data &lt;- read.table(
   header = T, sep = &quot;\t&quot;
   )
 
-data(&quot;averaged_rates&quot;)
+# média para cada comunidade
 
+averaged_rates &lt;- purrr::map_dfr(1:nrow(comm_data), function (i){
+  # across assemblages
+  purrr::map_dfr(trans_rates, function (sims) { # across simulations
+    
+    # species in the assemblages
+    gather_names &lt;- names(comm_data[i,][which(comm_data[i,]&gt;0)]) # get the names
+    # subset of rates
+    rates &lt;- sims[which(rownames (sims) %in% gather_names),
+                   c(&quot;prop.transitions&quot;, 
+                     &quot;stasis.time&quot;,
+                     &quot;last.transition.time&quot;)]
+    mean_rates &lt;- apply(rates, 2, mean) # and calculate the average
+    mean_rates
+  }) %&gt;% 
+    purrr::map(mean)
+})
+
+# o passo anterior demora, vamos ler um objeto pronto
+
+data(&quot;averaged_rates&quot;)
+View(averaged_rates)
 
 # prepare data to map
 data_to_map_wide &lt;- data.frame(geo_data[,c(&quot;LONG&quot;, &quot;LAT&quot;)], averaged_rates)
@@ -388,6 +416,8 @@ list_map_transitions &lt;- lapply(unique(data_to_map_long$variables), function(m
 # Create map
 mapTransition_rate &lt;- patchwork::wrap_plots(list_map_transitions) +
   patchwork::plot_annotation(tag_levels = &quot;A&quot;)</code></pre>
+<p>podemos observar os padrões da dinâmica macroevolutiva no espaço</p>
+<p><img src="figs/trait_macroevol.jpeg" width="758" /></p>
 </div>
 
 

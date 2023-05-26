@@ -279,18 +279,23 @@ $(document).ready(function () {
 class="section level1">
 <h1>Integrando modelos macroevolutivos e dados de assembleias</h1>
 <p>A partir desta seção você vai encontrar métodos que integram modelos
-macroevolutivos e dados de ocorrência de espécies em assembleias. Para
-isso precisaremos de dados que retornam de modelos macroevolutivos de
-reconstrução de área ancestral. Por enquanato o Herodotools é capaz de
-lidar apenas com resultados que retornam dos modelos de reconstrução
-vindos do pacote {<code>BioGeoBEARS</code>}</p>
+macroevolutivos e dados de ocorrência de espécies em
+assembleias/comunidades. Para isso precisaremos combinar resultados de
+modelos macroevolutivos de reconstrução de área ancestral com dados de
+ocorrência de espécies em assembleias/comunidades. Por enquanto, o
+Herodotools é capaz de lidar apenas com resultados que retornam dos
+modelos de reconstrução vindos do pacote <a
+href="http://phylo.wikidot.com/biogeobears">{<code>BioGeoBEARS</code>}</a>.</p>
 <p>Visto que o modelo de reconstrução de áreas ancestrais pode demorar
-para rodar, vamos ler um modelo pronto apenas para fins didáticos. Neste
-modelo reconstruímos as evoregiões para os nós ancestrais das espécies
-de Akodon utilizadas anteriormente</p>
+um pouco para rodar, vamos carregar um resultado de um modelo pronto
+apenas para fins didáticos. Neste modelo reconstruímos as evoregiões
+para os nós ancestrais das espécies de Akodon utilizadas anteriormente.
+O modelo utilizado aqui foi o <a
+href="https://onlinelibrary.wiley.com/doi/10.1111/j.0014-3820.2005.tb00940.x">DEC
+(Dispersal-Extinction-Cladogenesis)</a></p>
 <pre class="r"><code>library(BioGeoBEARS)
 load(file = system.file(&quot;extdata&quot;, &quot;resDEC_akodon.RData&quot;, package = &quot;Herodotools&quot;)) </code></pre>
-<p>Caso queira construir seu próprio modelo de reconstrução de áreas
+<p>Caso queiram construir seu próprio modelo de reconstrução de áreas
 ancestrais utilizando o BioGeoBEARS, o pacote Herodotools apresenta
 algumas funções auxiliares para obtenção de dados nos formatos
 necessários para o BioGeoBEARS. Por exemplo, precisamos de um objeto que
@@ -313,17 +318,42 @@ href="http://scikit-bio.org/docs/0.2.3/generated/skbio.io.phylip.html">Phyllip</
 <p>Confira o arquivo Phyllip gerado, e que agora foi salvo no seu
 workspace.</p>
 <p>A partir de agora vamos calcular métricas implementadas no pacote que
-integram tanto o dado de ocorrência atual com o dado do modelo de
-reconstrução de áreas ancestrais obtidos a partir da reconstrução das
-evoregiões (lembrando que esta reconstrução poderia ser feita com outro
-tipo de dado biogeográfico)</p>
+integram tanto o dado de ocorrência atual em assembleias/comunidades,
+com o dado do modelo de reconstrução de áreas ancestrais obtidos a
+partir da reconstrução das evoregiões (lembrando que esta reconstrução
+poderia ser feita com outro tipo de dado biogeográfico).</p>
 <div id="idade-de-comunidades" class="section level2">
 <h2>Idade de comunidades</h2>
 <p>Vamos inciar calculando a idade das assembleias considerando a
 distribuição presente e passada das linhagens. Para mais informação
 sobre como esta métrica pode ser utilizada, dê uma olhada <a
 href="https://academic.oup.com/biolinnean/article-abstract/134/1/57/6297962">nesse
-artigo</a></p>
+artigo</a>.</p>
+<p>Lembrando rapidamente uma forma de se calcular a idade e o problema
+associada a ela</p>
+<p><img src="figs/crown-age.png" width="222" /></p>
+<p>O problema desta abordagem é que é assumido que o ancestral mais
+recente que une as espécies de uma comunidade corresponde ao momento de
+chegada destas espécies na região que a comunidade se encontra. Algo
+como mostrado na figura seguinte para as comunidades 1, 2 e 4</p>
+<p><img src="figs/cover_image.png.001.png" width="960" /></p>
+<p>Porém, isso nem sempre é verdade… Note as comunidades 3 e 5</p>
+<p>Ao invés de adotarmos a premissa do crown age, podemos usar
+diretamente a informação da distribuição passada do ancestral para saber
+quando foi o momento que a linhagem chegou e se estabeleceu na região
+focal. Em termos gerais, é isso que a métrica de idade do pacote
+Herodotools faz.</p>
+<p>Para tanto precisamos de algumas informações.</p>
+<ul>
+<li><p>A área/região que cada assembleia está localizada -
+<code>biogeo_area</code></p></li>
+<li><p>A área/região que cada nó (ancestral) se localizava -
+<code>node_area</code></p></li>
+<li><p>A ocorrência atual das espécies nas assembleias -
+<code>akodon_pa_tree</code></p></li>
+</ul>
+<p>Com esses três objetos calculamos a idade de chegada e
+estabelecimento médio das linhagens nas assembleias</p>
 <pre class="r"><code>biogeo_area &lt;- data.frame(biogeo = chartr(&quot;12345&quot;, &quot;ABCDE&quot;, evoregion_df$site_region)) 
 
 # getting the ancestral range area for each node 
@@ -377,12 +407,14 @@ map_age</code></pre>
 </div>
 <div id="diversificação-in-situ" class="section level2">
 <h2>Diversificação in-situ</h2>
-<p>Outra nova métrica que integra a distribuição passada e presente das
-espécies em nível de assembleias é a <strong>Diversificação
+<p>Outra nova métrica que integra o range de distribuição passado e
+atual das espécies em nível de assembleias é a <strong>Diversificação
 in-situ</strong>. Esta métrica é uma simples modificação da métrica DR
 (obtida a partir do inverso do equal-splits), que considera apenas a
-porção de diversificação que ocorreu <strong>dentro</strong> de uma
-região.</p>
+porção (proporção) de diversificação que ocorreu <strong>dentro</strong>
+de uma região após a chegada e estabelecimento de uma linhagem.</p>
+<p>A lógica está ilustrada na figura abaixo</p>
+<p><img src="figs/Fig2_methods_core_300dpi.jpeg" width="1006" /></p>
 <pre class="r"><code>akodon_diversification &lt;- 
 Herodotools::calc_insitu_diversification(W = akodon_pa_tree,
                    tree = akodon_newick, 
@@ -560,6 +592,14 @@ para considerar a diversificação in situ em seus cálculos.
 Especificamente implementamos versões da PD (Phylogenetic diversity) e
 PE (Phylogenetic endemism), denominadas, respectivamente, PD in situ e
 PE in situ.</p>
+<p>As métricas de ecologia filogenética de comunidades consideram toda a
+história evolutiva da linhagem, “misturando” a porção que emerge dentro
+de uma região, e fora dela. A lógica das métricas implementadas no
+Herodotools é separar apenas a diversidade que emerge após a chegada e
+estabelecimento das linhagens na área atual de ocorrência das espécies.
+A lógica é similar ao cálculo de DR in situ, ilustrada na imagem a
+seguir</p>
+<p><img src="figs/Fig2_methods_core_300dpi.jpeg" width="1006" /></p>
 <pre class="r"><code>akodon_PD_PE_insitu &lt;- calc_insitu_metrics(W = akodon_pa_tree,
                   tree = akodon_newick, 
                   ancestral.area = node_area, 
@@ -629,6 +669,10 @@ map_PEinsitu &lt;-
      legend.text = element_text(size = 7)
    )
 map_PEinsitu</code></pre>
+<p>Aqui um exemplo um pouco mais ilustrativo das diferenças entre a
+métrica de endemismo tradicional e a PE in situ para aves (tiranídeos)
+da América do Sul</p>
+<p><img src="figs/highlight_PE_amazon.png" width="527" height="100%" /></p>
 </div>
 </div>
 

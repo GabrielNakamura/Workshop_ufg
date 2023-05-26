@@ -13,7 +13,12 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 Veremos agora como integrar métodos de reconstrução de atributos de espécies (atributos categóricos), com dados de comunidades. Calcularemos três métricas desenvolvidas por [Luza et al (2021)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.8476) e implementadas no pacote Herodotools.
 
-Para isso vamos utilizar um outro conjunto de dados
+Para isso vamos utilizar um outro conjunto de dados que compreende 214 espécies de roedores sigmodontídeos. Antes de iniciar os códigos, vamos apreciar a fofura dos sigmodontideos
+
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figs", "sigmodontideos.jpeg"))
+```
+
 
 ```{r}
 data("rodent_phylo")
@@ -27,6 +32,9 @@ Vamos calcular três métricas, são elas:
 - Stasis
 
 - Tempo da última transição
+
+
+O método de reconstrução utilizado aqui é o [Mapeamento Estocástico de Caracteres](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-88)
 
 ```{r}
 # run `calc_tip_based_trait_evo` function 
@@ -45,6 +53,7 @@ Visto que esta análise leva um certo tempo, vamos ler o resultado dela para ent
 
 ```{r}
 load(system.file("extdata", "transition_rate_res.RData", package = "Herodotools"))
+View(trans_rates)
 ```
 
 Estes dados podem ser projetados no espaço geográfico da seguinte maneira
@@ -64,8 +73,29 @@ geo_data <- read.table(
   header = T, sep = "\t"
   )
 
-data("averaged_rates")
+# média para cada comunidade
 
+averaged_rates <- purrr::map_dfr(1:nrow(comm_data), function (i){
+  # across assemblages
+  purrr::map_dfr(trans_rates, function (sims) { # across simulations
+    
+    # species in the assemblages
+    gather_names <- names(comm_data[i,][which(comm_data[i,]>0)]) # get the names
+    # subset of rates
+    rates <- sims[which(rownames (sims) %in% gather_names),
+                   c("prop.transitions", 
+                     "stasis.time",
+                     "last.transition.time")]
+    mean_rates <- apply(rates, 2, mean) # and calculate the average
+    mean_rates
+  }) %>% 
+    purrr::map(mean)
+})
+
+# o passo anterior demora, vamos ler um objeto pronto
+
+data("averaged_rates")
+View(averaged_rates)
 
 # prepare data to map
 data_to_map_wide <- data.frame(geo_data[,c("LONG", "LAT")], averaged_rates)
@@ -136,5 +166,10 @@ mapTransition_rate <- patchwork::wrap_plots(list_map_transitions) +
   patchwork::plot_annotation(tag_levels = "A")
 ```
 
+podemos observar os padrões da dinâmica macroevolutiva no espaço
+
+```{r echo=FALSE,eval=TRUE}
+knitr::include_graphics(here::here("figs", "trait_macroevol.jpeg"))
+```
 
 
